@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- STARTING POINT -->
+    <string name="starting_point_sign_in">Sign in</string>
+    <string name="starting_point_create_account">Create account</string>
+    <!-- LOGIN -->
+    <string name="login_sign_in_to_continue">Sign in to continue</string>
+    <string name="login_email">Email</string>
+    <string name="login_email_placeholder">Enter your email</string>
+    <string name="login_email_invalid">Invalid email address</string>
+    <string name="login_password">Password</string>
+    <string name="login_password_placeholder">Enter your password</string>
+    <string name="login_hide_password">Hide password</string>
+    <string name="login_show_password">Show password</string>
+    <string name="login_sign_in">Sign in</string>
+    <string name="login_forgot_password">Forgot Password?</string>
+    <string name="login_new_user">New User? Create Account</string>
+    <!--REGISTRATION-->
+    <string name="registration_first_name">First name</string>
+    <string name="registration_first_name_placeholder">Enter your first name</string>
+    <string name="registration_last_name">Last name</string>
+    <string name="registration_last_name_placeholder">Enter your last name</string>
+    <string name="registration_birthday">Date of birth</string>
+    <string name="registration_birthday_placeholder">Enter your date of birth</string>
+    <string name="registration_phone">Mobile phone</string>
+    <string name="registration_phone_placeholder">Enter your phone</string>
+    <string name="registration_create_account">Create account</string>
+    <string name="registration_already_in">Already have an account? Sign in</string>
+    <string name="registration_sign_up">Sign up to start using app</string>
+    <!--BOTTOM BAR-->
+    <string name="bottom_bar_home">Home</string>
+    <string name="bottom_bar_cart">Cart</string>
+    <string name="bottom_bar_profile">My profile</string>
+    <string name="bottom_bar_information">Information</string>
+    <string name="bottom_bar_diagnosis">Self-diagnosis</string>
+    <string name="bottom_bar_contacts">Contacts list</string>
+    <!--TOP BAR-->
+    <string name="top_bar_close_mode">Close mode</string>
+    <!--CONTACT LIST-->
+    <string name="contact_list_title">Emergency Contacts</string>
+    <string name="contact_list_description">To ensure we can assist you in case of an emergency, please provide the contact information of someone who can be notified in such situations</string>
+    <string name="contact_list_add_contact">Add contact</string>
+    <!--ADD CONTACT-->
+    <string name="add_contact_first_title">Add Emergency Contacts</string>
+    <string name="add_contact_first_description">To ensure we can assist you in case of an emergency, please provide the contact information of someone who can be notified in such situations</string>
+    <string name="add_contact_first_name_placeholder">Enter first name</string>
+    <string name="add_contact_last_name_placeholder">Enter last name</string>
+    <string name="add_contact_phone_placeholder">Enter mobile phone</string>
+    <string name="add_contact_legend">* This information will be kept confidential and used only in emergency situations.</string>
+    <string name="add_contact_another_button">Add another contact</string>
+    <string name="add_contact_save_button">Save contacts</string>
+    <!--PROFILE-->
+    <string name="profile_edit_button">Edit Profile</string>
+    <string name="profile_change_password">Change password</string>
+    <string name="profile_log_out">Log out</string>
+    <string name="profile_birthdate">Date of birth</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_phone">Mobile phone</string>
+    <!--DASHBOARD 1-->
+    <string name="dashboard_1_title">Step into safety  with Centro-I app</string>
+    <string name="dashboard_1_description">Centro-I is a lifeline designed to empower and protect you and your loved ones in situations of domestic violence.</string>
+    <!--DASHBOARD 2-->
+    <string name="dashboard_2_title">Important Information</string>
+    <string name="dashboard_2_description">Carefully review the text on the next two screens. You’ll only have one opportunity to read it, as it won’t appear again. It will take less than two minutes of your time.</string>
+    <!--DASHBOARD 3-->
+    <string name="dashboard_3_title">Confidential Mode</string>
+    <string name="dashboard_3_description">To access the hidden section of the app, tap and hold the logo for 2 seconds.</string>
+    <!--DASHBOARD 4-->
+    <string name="dashboard_4_title">Quick Exit</string>
+    <string name="dashboard_4_description">To quickly close the hidden section, simply tap the button at the top of the screen.</string>
+    <!--DASHBOARD 5-->
+    <string name="dashboard_5_title">Data Security</string>
+    <string name="dashboard_5_description">We value your privacy. Before proceeding, please review the Privacy Notice and User Agreement.</string>
+    <string name="dashboard_5_privacy_notice">І agree to the Privacy Notice and User Agreement</string>
+    <string name="dashboard_5_personal_data">I consent to the processing of my personal data for the purposes of this app’s functionality</string>
+    <string name="dashboards_continue">Next step</string>
+    <!--CART-->
+    <string name="cart_empty">Oops, your Cart is empty.</string>
+    <string name="cart_continue_shopping">Continue Shopping</string>
+    <string name="cart_recently_viewed">Recently Viewed</string>
+    <!--PRODUCT DETAILS-->
+    <string name="product_details_add_to_cart">Add to Cart</string>
+    <string name="product_details_title">Product details</string>
+    <string name="product_details_top_highlight">Top highlights</string>
+    <string name="product_details_material">Material</string>
+    <string name="product_details_brand">Brand</string>
+    <string name="product_details_package_information">Package Information</string>
+    <string name="product_details_included_components">Included Components</string>
+    <string name="product_details_unit_count">Unit Count</string>
+    <!--INFORMATION-->
+    <string name="information_recommendations">Recommendations</string>
+    <string name="information_where_to_go">Where to Go</string>
+    <string name="information_more_info">Where to Get More Info</string>
+    <!--SELF-DIAGNOSIS-->
+    <string name="self_diagnosis_title">Check your situation now</string>
+    <string name="self_diagnosis_subtitle">Fast, simple, and confidential</string>
+    <string name="self_diagnosis_description">This tool helps you identify signs of unhealthy or abusive relationships. By answering a few quick questions, you can gain insight into your situation and explore supportive resources available just for you. </string>
+    <string name="self_diagnosis_start">Start self-diagnosis</string>
+    <!--PANIC BUTTON-->
+    <string name="panic_button_title">SOS Confirmation</string>
+    <string name="panic_button_description">When you´re feeling unsafe, SLIDE the button below to share your location with your contact list.</string>
+    <string name="panic_button_slide">Slide to send alert</string>
+    <string name="panic_button">Panic button</string>
+    <string name="panic_cancel">Close </string>
+</resources>
