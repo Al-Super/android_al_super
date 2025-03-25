@@ -120,32 +120,54 @@ internal fun AddAndEditContactScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Button(
-            onClick = {
-                if (contactId == null) {
-                    // Insert New Contact
-                    viewModel.insertContact(name, surname, phoneNumber)
-                } else {
-                    // Update Existing Contact
-                    viewModel.updateContact(
-                        EmergencyContact(
-                            id = contactId,
-                            name = name,
-                            surname = surname,
-                            phoneNumber = phoneNumber,
-                            color = color
-                        )
+        ButtonSection(
+            contactId,
+            viewModel,
+            name,
+            surname,
+            phoneNumber,
+            color,
+            saveContact
+        )
+    }
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun ButtonSection(
+    contactId: Int?,
+    viewModel: EmergencyContactsViewModel,
+    name: String,
+    surname: String,
+    phoneNumber: String,
+    color: String,
+    saveContact: () -> Unit
+) {
+    Button(
+        onClick = {
+            if (contactId == null) {
+                // Insert New Contact
+                viewModel.insertContact(name, surname, phoneNumber)
+            } else {
+                // Update Existing Contact
+                viewModel.updateContact(
+                    EmergencyContact(
+                        id = contactId,
+                        name = name,
+                        surname = surname,
+                        phoneNumber = phoneNumber,
+                        color = color
                     )
-                }
-                saveContact()
-          },
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(id= R.string.add_contact_save_button)
-            )
-        }
+                )
+            }
+            saveContact()
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = stringResource(id = R.string.add_contact_save_button)
+        )
     }
 }
 
