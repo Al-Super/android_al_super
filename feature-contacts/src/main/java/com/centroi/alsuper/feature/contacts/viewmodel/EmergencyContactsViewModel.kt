@@ -32,6 +32,7 @@ class EmergencyContactsViewModel @Inject constructor(
 
     fun insertContact(name: String, surname: String, phoneNumber: String) {
         val randomColor = generateRandomColor()
+        //val randomColor = "#FF0000" // Hardcoded color for now
         val encryptedPhoneNumber = EncryptionHelper.encrypt(phoneNumber)
 
         val contact = EmergencyContact(
@@ -85,8 +86,7 @@ class EmergencyContactsViewModel @Inject constructor(
     }
 
     private fun generateRandomColor(): String {
-        val random = Random.Default
-        val color = String.format("#%06X", (random.nextInt(0xFFFFFF)))
-        return color
+        val color = java.util.Random().nextInt(0xFFFFFF)
+        return "#" + java.lang.String.format("%06X", color)
     }
 }

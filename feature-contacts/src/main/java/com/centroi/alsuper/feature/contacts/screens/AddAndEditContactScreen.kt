@@ -104,10 +104,43 @@ internal fun AddAndEditContactScreen(
             .padding(spacing.space3x),
         verticalArrangement = Arrangement.spacedBy(spacing.space3x)
     ) {
-        val triple = ContactInputSection(name, surname, phoneNumber)
-        name = triple.first
-        phoneNumber = triple.second
-        surname = triple.third
+        Text(
+            text = stringResource(R.string.add_contact_first_title),
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.titleLarge,
+        )
+
+        Text(
+            text = stringResource(R.string.add_contact_first_description),
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.labelMedium,
+        )
+
+        NameTextField(
+            labelText = stringResource(id = R.string.registration_first_name),
+            placeholderText = stringResource(id = R.string.add_contact_first_name_placeholder),
+            onValueChange = { name = it },
+            defaultValue = name
+        )
+
+        NameTextField(
+            labelText = stringResource(id = R.string.registration_last_name),
+            placeholderText = stringResource(id = R.string.add_contact_last_name_placeholder),
+            onValueChange = { surname = it },
+            defaultValue = surname
+        )
+
+        PhoneNumberTextField(
+            placeholder = stringResource(R.string.add_contact_phone_placeholder),
+            defaultValue = phoneNumber,
+            onValueChange = { phoneNumber = it }
+        )
+
+        Text(
+            text = stringResource(R.string.add_contact_legend),
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Thin),
+        )
 
         if(contactId == null) {
             MainButton(
@@ -120,102 +153,31 @@ internal fun AddAndEditContactScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        ButtonSection(
-            contactId,
-            viewModel,
-            name,
-            surname,
-            phoneNumber,
-            color,
-            saveContact
-        )
-    }
-}
-
-@Suppress("LongParameterList")
-@Composable
-private fun ButtonSection(
-    contactId: Int?,
-    viewModel: EmergencyContactsViewModel,
-    name: String,
-    surname: String,
-    phoneNumber: String,
-    color: String,
-    saveContact: () -> Unit
-) {
-    Button(
-        onClick = {
-            if (contactId == null) {
-                // Insert New Contact
-                viewModel.insertContact(name, surname, phoneNumber)
-            } else {
-                // Update Existing Contact
-                viewModel.updateContact(
-                    EmergencyContact(
-                        id = contactId,
-                        name = name,
-                        surname = surname,
-                        phoneNumber = phoneNumber,
-                        color = color
+        Button(
+            onClick = {
+                if (contactId == null) {
+                    // Insert New Contact
+                    viewModel.insertContact(name, surname, phoneNumber)
+                } else {
+                    // Update Existing Contact
+                    viewModel.updateContact(
+                        EmergencyContact(
+                            id = contactId,
+                            name = name,
+                            surname = surname,
+                            phoneNumber = phoneNumber,
+                            color = color
+                        )
                     )
-                )
-            }
-            saveContact()
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Text(
-            text = stringResource(id = R.string.add_contact_save_button)
-        )
+                }
+                saveContact()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(id= R.string.add_contact_save_button)
+            )
+        }
     }
-}
-
-@Composable
-private fun ContactInputSection(
-    name: String,
-    surname: String,
-    phoneNumber: String
-): Triple<String, String, String> {
-    var name1 = name
-    var surname1 = surname
-    var phoneNumber1 = phoneNumber
-    Text(
-        text = stringResource(R.string.add_contact_first_title),
-        color = MaterialTheme.colorScheme.onSurface,
-        style = MaterialTheme.typography.titleLarge,
-    )
-
-    Text(
-        text = stringResource(R.string.add_contact_first_description),
-        color = MaterialTheme.colorScheme.onSurface,
-        style = MaterialTheme.typography.labelMedium,
-    )
-
-    NameTextField(
-        labelText = stringResource(id = R.string.registration_first_name),
-        placeholderText = stringResource(id = R.string.add_contact_first_name_placeholder),
-        onValueChange = { name1 = it },
-        defaultValue = name1
-    )
-
-    NameTextField(
-        labelText = stringResource(id = R.string.registration_last_name),
-        placeholderText = stringResource(id = R.string.add_contact_last_name_placeholder),
-        onValueChange = { surname1 = it },
-        defaultValue = surname1
-    )
-
-    PhoneNumberTextField(
-        placeholder = stringResource(R.string.add_contact_phone_placeholder),
-        defaultValue = phoneNumber1,
-        onValueChange = { phoneNumber1 = it }
-    )
-
-    Text(
-        text = stringResource(R.string.add_contact_legend),
-        color = MaterialTheme.colorScheme.onSurface,
-        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Thin),
-    )
-    return Triple(name1, phoneNumber1, surname1)
 }
