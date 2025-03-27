@@ -1,11 +1,14 @@
 package com.centroi.alsuper.feature.contacts.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -16,14 +19,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.centroi.alsuper.core.database.tables.EmergencyContact
+import com.centroi.alsuper.core.ui.Dimens
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
 import com.centroi.alsuper.core.ui.components.button.MainButton
@@ -72,36 +78,95 @@ fun EditContactScreen(navController: NavController, contactId: Int) {
 
 @Composable
 internal fun AddAndEditContactScreen(
-    contactId: Int? = null, // Nullable ID to determine Add/Edit mode
+    contactId: Int? = null,
     viewModel: EmergencyContactsViewModel = hiltViewModel(),
     saveContact: () -> Unit = {}
 ) {
     val spacing = LocalSpacing.current
+    val formState = rememberContactState(contactId, viewModel)
 
-    var loading by remember { mutableStateOf(false) }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(spacing.space3x)
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 72.dp), // Leaves space for the button
+            verticalArrangement = Arrangement.spacedBy(spacing.space3x)
+        ) {
+            item {
+                ContactFormContent(contactId, formState, spacing)
+            }
+        }
+
+        SaveContactButton(
+            contactId = contactId,
+            viewModel = viewModel,
+            formState = formState,
+            saveContact = saveContact,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .heightIn(min = 56.dp)
+        )
+    }
+}
+
+@Composable
+private fun rememberContactState(
+    contactId: Int?,
+    viewModel: EmergencyContactsViewModel
+): ContactFormState {
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
     var color by remember { mutableStateOf("") }
 
-    // Load contact data if editing
     LaunchedEffect(contactId) {
         contactId?.let {
-            viewModel.loadContactById(contactId) { existingContact ->
-                existingContact?.let {
-                    name = existingContact.name
-                    surname = existingContact.surname
-                    phoneNumber = existingContact.phoneNumber // Already decrypted in ViewModel
-                    color = existingContact.color
+            viewModel.loadContactById(it) { existingContact ->
+                existingContact?.let { contact ->
+                    name = contact.name
+                    surname = contact.surname
+                    phoneNumber = contact.phoneNumber
+                    color = contact.color
                 }
             }
         }
     }
 
+    return ContactFormState(
+        name = name,
+        surname = surname,
+        phoneNumber = phoneNumber,
+        color = color,
+        onNameChange = { name = it },
+        onSurnameChange = { surname = it },
+        onPhoneNumberChange = { phoneNumber = it }
+    )
+}
+
+data class ContactFormState(
+    val name: String,
+    val surname: String,
+    val phoneNumber: String,
+    val color: String,
+    val onNameChange: (String) -> Unit,
+    val onSurnameChange: (String) -> Unit,
+    val onPhoneNumberChange: (String) -> Unit,
+)
+
+@Composable
+private fun ContactFormContent(
+    contactId: Int?,
+    formState: ContactFormState,
+    spacing: Dimens
+) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(spacing.space3x),
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(spacing.space3x)
     ) {
         Text(
@@ -117,23 +182,23 @@ internal fun AddAndEditContactScreen(
         )
 
         NameTextField(
-            labelText = stringResource(id = R.string.registration_first_name),
-            placeholderText = stringResource(id = R.string.add_contact_first_name_placeholder),
-            onValueChange = { name = it },
-            defaultValue = name
+            labelText = stringResource(R.string.registration_first_name),
+            placeholderText = stringResource(R.string.add_contact_first_name_placeholder),
+            onValueChange = formState.onNameChange,
+            defaultValue = formState.name
         )
 
         NameTextField(
-            labelText = stringResource(id = R.string.registration_last_name),
-            placeholderText = stringResource(id = R.string.add_contact_last_name_placeholder),
-            onValueChange = { surname = it },
-            defaultValue = surname
+            labelText = stringResource(R.string.registration_last_name),
+            placeholderText = stringResource(R.string.add_contact_last_name_placeholder),
+            onValueChange = formState.onSurnameChange,
+            defaultValue = formState.surname
         )
 
         PhoneNumberTextField(
             placeholder = stringResource(R.string.add_contact_phone_placeholder),
-            defaultValue = phoneNumber,
-            onValueChange = { phoneNumber = it }
+            defaultValue = formState.phoneNumber,
+            onValueChange = formState.onPhoneNumberChange
         )
 
         Text(
@@ -142,42 +207,42 @@ internal fun AddAndEditContactScreen(
             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Thin),
         )
 
-        if(contactId == null) {
+        if (contactId == null) {
             MainButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = stringResource(id = R.string.add_contact_another_button)
-            ) {
-            }
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(R.string.add_contact_another_button)
+            ) {}
         }
+    }
+}
 
-        Spacer(modifier = Modifier.weight(1f))
-
-        Button(
-            onClick = {
-                if (contactId == null) {
-                    // Insert New Contact
-                    viewModel.insertContact(name, surname, phoneNumber)
-                } else {
-                    // Update Existing Contact
-                    viewModel.updateContact(
-                        EmergencyContact(
-                            id = contactId,
-                            name = name,
-                            surname = surname,
-                            phoneNumber = phoneNumber,
-                            color = color
-                        )
+@Composable
+private fun SaveContactButton(
+    contactId: Int?,
+    viewModel: EmergencyContactsViewModel,
+    formState: ContactFormState,
+    saveContact: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = {
+            if (contactId == null) {
+                viewModel.insertContact(formState.name, formState.surname, formState.phoneNumber)
+            } else {
+                viewModel.updateContact(
+                    EmergencyContact(
+                        id = contactId,
+                        name = formState.name,
+                        surname = formState.surname,
+                        phoneNumber = formState.phoneNumber,
+                        color = formState.color
                     )
-                }
-                saveContact()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(id= R.string.add_contact_save_button)
-            )
-        }
+                )
+            }
+            saveContact()
+        },
+        modifier = modifier
+    ) {
+        Text(text = stringResource(R.string.add_contact_save_button))
     }
 }

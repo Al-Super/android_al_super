@@ -24,4 +24,10 @@ data class Dimens(
 
 )
 
+data class FontWeight(
+    val weight300x : Int = 300,
+    val weight400x : Int = 400
+)
+
 val LocalSpacing = compositionLocalOf { Dimens() }
+val LocalFontWeight = compositionLocalOf { FontWeight() }
