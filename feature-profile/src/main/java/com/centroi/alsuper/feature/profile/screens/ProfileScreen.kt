@@ -36,7 +36,7 @@ fun ProfileScreen() {
             .fillMaxSize()
             .padding(spacing.space3x)
     ) {
-        ProfileDataContainer(spacing)
+        ProfileDataContainer(spacing, fontWeight)
         ProfileActions(spacing, fontWeight)
     }
 }
@@ -53,29 +53,13 @@ private fun ProfileActions(
             .background(MaterialTheme.colorScheme.outline)
             .padding(top = spacing.space3x)
     )
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                top = spacing.space3x,
-                bottom = spacing.space3x
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(spacing.space3x)
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_key),
-            contentDescription = stringResource(id = R.string.top_bar_close_mode),
-            tint = MaterialTheme.colorScheme.outline
-        )
-        Text(
-            text = stringResource(id = R.string.profile_change_password),
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight(fontWeight.weight400x),
-                color = MaterialTheme.colorScheme.outline
-            )
-        )
-    }
+
+    ProfileActionOption(
+        spacing,
+        fontWeight,
+        R.drawable.ic_key,
+        R.string.profile_change_password
+    )
 
     Spacer(
         modifier = Modifier
@@ -85,29 +69,12 @@ private fun ProfileActions(
             .padding(top = spacing.space3x)
     )
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                top = spacing.space3x,
-                bottom = spacing.space3x
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(spacing.space3x)
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_logout),
-            contentDescription = stringResource(id = R.string.top_bar_close_mode),
-            tint = MaterialTheme.colorScheme.outline
-        )
-        Text(
-            text = stringResource(id = R.string.profile_log_out),
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight(400),
-                color = MaterialTheme.colorScheme.outline
-            )
-        )
-    }
+    ProfileActionOption(
+        spacing,
+        fontWeight,
+        R.drawable.ic_logout,
+        R.string.profile_log_out
+    )
 
     Spacer(
         modifier = Modifier
@@ -119,7 +86,42 @@ private fun ProfileActions(
 }
 
 @Composable
-private fun ProfileDataContainer(spacing: Dimens) {
+private fun ProfileActionOption(
+    spacing: Dimens,
+    fontWeight: com.centroi.alsuper.core.ui.FontWeight,
+    icon: Int,
+    text: Int
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                top = spacing.space3x,
+                bottom = spacing.space3x
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(spacing.space3x)
+    ) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = stringResource(id = text),
+            tint = MaterialTheme.colorScheme.outline
+        )
+        Text(
+            text = stringResource(id = text),
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight(fontWeight.weight400x),
+                color = MaterialTheme.colorScheme.outline
+            )
+        )
+    }
+}
+
+@Composable
+private fun ProfileDataContainer(
+    spacing: Dimens,
+    fontWeight: com.centroi.alsuper.core.ui.FontWeight
+) {
     AlSuperCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -137,66 +139,82 @@ private fun ProfileDataContainer(spacing: Dimens) {
                 Text(stringResource(id = R.string.profile_edit_button))
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AlSuperCircularContainer(
-                    initials = "MG",
-                    backgroundColor = MaterialTheme.colorScheme.surfaceTint,
-                    size = spacing.imageMedium
-                )
-                Spacer(modifier = Modifier.height(spacing.space3x))
-                Text(
-                    text = "María García",
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
+            UserName(spacing)
 
             Spacer(modifier = Modifier.height(spacing.space3x))
 
-            Text(
-                text = stringResource(id = R.string.profile_birthdate),
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontWeight = FontWeight(300)
-                )
-            )
-            Text(
-                text = "12/03/1998",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight(400)
-                )
-            )
-            Spacer(modifier = Modifier.height(spacing.space3x))
-
-            Text(
-                text = stringResource(id = R.string.profile_email),
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontWeight = FontWeight(300)
-                )
-            )
-            Text(
-                text = "mariagarcia@gmail.com",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight(400)
-                )
-            )
-            Spacer(modifier = Modifier.height(spacing.space3x))
-
-            Text(
-                text = stringResource(id = R.string.profile_phone),
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontWeight = FontWeight(300)
-                )
-            )
-            Text(
-                text = "+52 1 55 1234 5678",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight(400)
-                )
+            UserData(
+                spacing,
+                fontWeight
             )
         }
+    }
+}
+
+@Composable
+private fun UserData(
+    spacing: Dimens,
+    fontWeight: com.centroi.alsuper.core.ui.FontWeight
+) {
+    Text(
+        text = stringResource(id = R.string.profile_birthdate),
+        style = MaterialTheme.typography.labelSmall.copy(
+            fontWeight = FontWeight(fontWeight.weight300x)
+        )
+    )
+    Text(
+        text = "12/03/1998",
+        style = MaterialTheme.typography.titleMedium.copy(
+            fontWeight = FontWeight(fontWeight.weight400x)
+        )
+    )
+    Spacer(modifier = Modifier.height(spacing.space3x))
+
+    Text(
+        text = stringResource(id = R.string.profile_email),
+        style = MaterialTheme.typography.labelSmall.copy(
+            fontWeight = FontWeight(fontWeight.weight300x)
+        )
+    )
+    Text(
+        text = "mariagarcia@gmail.com",
+        style = MaterialTheme.typography.titleMedium.copy(
+            fontWeight = FontWeight(fontWeight.weight400x)
+        )
+    )
+    Spacer(modifier = Modifier.height(spacing.space3x))
+
+    Text(
+        text = stringResource(id = R.string.profile_phone),
+        style = MaterialTheme.typography.labelSmall.copy(
+            fontWeight = FontWeight(fontWeight.weight300x)
+        )
+    )
+    Text(
+        text = "+52 1 55 1234 5678",
+        style = MaterialTheme.typography.titleMedium.copy(
+            fontWeight = FontWeight(fontWeight.weight400x)
+        )
+    )
+}
+
+@Composable
+private fun UserName(spacing: Dimens) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        AlSuperCircularContainer(
+            initials = "MG",
+            backgroundColor = MaterialTheme.colorScheme.surfaceTint,
+            size = spacing.imageMedium
+        )
+        Spacer(modifier = Modifier.height(spacing.space3x))
+        Text(
+            text = "María García",
+            style = MaterialTheme.typography.titleLarge
+        )
     }
 }
 
