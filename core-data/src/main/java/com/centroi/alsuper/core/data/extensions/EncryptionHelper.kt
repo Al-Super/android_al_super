@@ -13,6 +13,9 @@ object EncryptionHelper {
     private const val ANDROID_KEYSTORE = "AndroidKeyStore"
     private const val KEY_ALIAS = "EmergencyContactKey"
     private const val AES_MODE = "AES/GCM/NoPadding"
+    private const val KEY_SIZE = 256
+    private const val IV_SIZE = 12
+    private const val T_LEN = 128
 
     // Generate or Retrieve Secret Key
     private fun getSecretKey(): SecretKey {
@@ -29,7 +32,7 @@ object EncryptionHelper {
         )
             .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-            .setKeySize(256)
+            .setKeySize(KEY_SIZE)
             .build()
         keyGenerator.init(spec)
         return keyGenerator.generateKey()
@@ -51,10 +54,10 @@ object EncryptionHelper {
         val cipher = Cipher.getInstance(AES_MODE)
         val decodedData = Base64.decode(encryptedData, Base64.DEFAULT)
 
-        val iv = decodedData.sliceArray(0 until 12) // Extract IV (first 12 bytes)
-        val encryptedBytes = decodedData.sliceArray(12 until decodedData.size)
+        val iv = decodedData.sliceArray(0 until IV_SIZE) // Extract IV (first 12 bytes)
+        val encryptedBytes = decodedData.sliceArray(IV_SIZE until decodedData.size)
 
-        val spec = GCMParameterSpec(128, iv)
+        val spec = GCMParameterSpec(T_LEN, iv)
         cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), spec)
 
         return String(cipher.doFinal(encryptedBytes))

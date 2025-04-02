@@ -38,7 +38,7 @@ android {
     }
 
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xno-inline", "-Xdebug-info")
+        //freeCompilerArgs = listOf("-Xno-inline", "-Xdebug-info")
         jvmTarget = "17"
     }
 

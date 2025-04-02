@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import com.centroi.alsuper.core.ui.AlSuperTheme
 import com.centroi.alsuper.core.ui.Dimens
+import com.centroi.alsuper.core.ui.LocalFontWeight
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.components.container.AlSuperCircularContainer
 import com.centroi.alsuper.core.ui.R
@@ -128,6 +129,7 @@ fun ContactItem(
     onEdit: (EmergencyContact) -> Unit,
     onDelete: (EmergencyContact) -> Unit
 ) {
+    val weight = LocalFontWeight.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -161,7 +163,7 @@ fun ContactItem(
                     text = contact.phoneNumber,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight(300)
+                        fontWeight = FontWeight(weight.weight300x)
                     )
                 )
             }

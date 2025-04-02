@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- STARTING POINT -->
+    <string name="starting_point_sign_in">Iniciar sesión</string>
+    <string name="starting_point_create_account">Crear cuenta</string>
+    <!-- LOGIN -->
+    <string name="login_sign_in_to_continue">Inicia sesión para continuar</string>
+    <string name="login_email">Correo electrónico</string>
+    <string name="login_email_placeholder">Ingresa tu correo electrónico</string>
+    <string name="login_email_invalid">Correo electrónico inválido</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_password_placeholder">Ingresa tu contraseña</string>
+    <string name="login_hide_password">Ocultar contraseña</string>
+    <string name="login_show_password">Mostrar contraseña</string>
+    <string name="login_sign_in">Iniciar sesión</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_new_user">¿Nueva usuaria? Crear cuenta</string>
+    <!--REGISTRATION-->
+    <string name="registration_first_name">Nombre</string>
+    <string name="registration_first_name_placeholder">Ingresa tu nombre</string>
+    <string name="registration_last_name">Apellido</string>
+    <string name="registration_last_name_placeholder">Ingresa tu apellido</string>
+    <string name="registration_birthday">Fecha de nacimiento</string>
+    <string name="registration_birthday_placeholder">Ingresa tu fecha de nacimiento</string>
+    <string name="registration_phone">Teléfono móvil</string>
+    <string name="registration_phone_placeholder">Ingresa tu teléfono</string>
+    <string name="registration_create_account">Crear cuenta</string>
+    <string name="registration_already_in">¿Ya tienes una cuenta? Iniciar sesión</string>
+    <string name="registration_sign_up">¿No tienes una cuenta? Entonces crea tu cuenta para empezar a usar la app</string>
+    <!--BOTTOM BAR-->
+    <string name="bottom_bar_home">Inicio</string>
+    <string name="bottom_bar_cart">Carrito</string>
+    <string name="bottom_bar_profile">Mi perfil</string>
+    <string name="bottom_bar_information">Información</string>
+    <string name="bottom_bar_diagnosis">Autodiagnóstico</string>
+    <string name="bottom_bar_contacts">Lista de contactos</string>
+    <!--TOP BAR-->
+    <string name="top_bar_close_mode">Salir del app</string>
+    <!--CONTACT LIST-->
+    <string name="contact_list_title">Contactos de emergencia</string>
+    <string name="contact_list_description">Para que puedas pedir ayuda en caso de encontrarte en una emergencia, por favor proporciona la información de contacto de las personas a quien quisieras avisar</string>
+    <string name="contact_list_add_contact">Agregar contacto</string>
+    <!--ADD CONTACT-->
+    <string name="add_contact_first_title">Agregar contactos de emergencia</string>
+    <string name="add_contact_first_description">Para que puedas pedir ayuda en caso de encontrarte en una emergencia, por favor proporciona la información de contacto de las personas a quien quisieras avisar</string>
+    <string name="add_contact_first_name_placeholder">Ingresa el nombre</string>
+    <string name="add_contact_last_name_placeholder">Ingresa el apellido</string>
+    <string name="add_contact_phone_placeholder">Ingresa el teléfono móvil</string>
+    <string name="add_contact_legend">Esta información se mantendrá confidencial y sólo se utilizará en situaciones de emergencia.</string>
+    <string name="add_contact_another_button">Agregar otro contacto</string>
+    <string name="add_contact_save_button">Guardar contactos</string>
+    <string name="add_contact_skip_button">Omitir paso</string>
+    <!--PROFILE-->
+    <string name="profile_edit_button">Editar perfil</string>
+    <string name="profile_change_password">Cambiar contraseña</string>
+    <string name="profile_log_out">Cerrar sesión</string>
+    <string name="profile_birthdate">Fecha de nacimiento</string>
+    <string name="profile_email">Correo electrónico</string>
+    <string name="profile_phone">Teléfono móvil</string>
+    <!--DASHBOARD 1-->
+    <string name="dashboard_1_title">Usa Al Súper como una herramienta para apoyarte y pedir ayuda de emergencia ante situaciones de violencia en tu casa o en tu entorno cercano.</string>
+    <string name="dashboard_1_description">Centro-I es un salvavidas diseñado para empoderarte y protegerte a ti y a tus seres queridos en situaciones de violencia doméstica.</string>
+    <!--DASHBOARD 2-->
+    <string name="dashboard_2_title">Información importante</string>
+    <string name="dashboard_2_description">Lee el texto en las siguientes dos pantallas. Solo tendrás una oportunidad para leerlo, ya que no volverá a aparecer. Tomará menos de dos minutos de tu tiempo.</string>
+    <!--DASHBOARD 3-->
+    <string name="dashboard_3_title">Modo confidencial y privado</string>
+    <string name="dashboard_3_description">Para acceder a la sección oculta de la app, mantén presionado el logo durante 2 segundos.</string>
+    <!--DASHBOARD 4-->
+    <string name="dashboard_4_title">Salida rápida</string>
+    <string name="dashboard_4_description">Para cerrar rápidamente la sección oculta, simplemente toca el logo que está en la parte superior de la pantalla.</string>
+    <!--DASHBOARD 5-->
+    <string name="dashboard_5_title">Protección de datos personales</string>
+    <string name="dashboard_5_description">Mantener tu privacidad es muy importante. Por favor lee los textos de Aviso de Privacidad y Términos y Condiciones de Uso tocando cada uno de los nombres.</string>
+    <string name="dashboard_5_privacy_notice">Acepto el Aviso de Privacidad y los Términos y Condiciones de Uso</string>
+    <string name="dashboard_5_personal_data">Pueden usar mis datos personales con la finalidad de que la app funcione adecuadamente.</string>
+    <string name="dashboards_continue">Siguiente paso</string>
+    <!--CART-->
+    <string name="cart_empty">Ups, tu carrito está vacío.</string>
+    <string name="cart_continue_shopping">Continuar comprando</string>
+    <string name="cart_recently_viewed">Visto recientemente</string>
+    <!--PRODUCT DETAILS-->
+    <string name="product_details_add_to_cart">Agregar al carrito</string>
+    <string name="product_details_title">Detalles del producto</string>
+    <string name="product_details_top_highlight">Aspectos destacados</string>
+    <string name="product_details_material">Material</string>
+    <string name="product_details_brand">Marca</string>
+    <string name="product_details_package_information">Información del paquete</string>
+    <string name="product_details_included_components">Componentes incluidos</string>
+    <string name="product_details_unit_count">Cantidad de unidades</string>
+    <!--INFORMATION-->
+    <string name="information_recommendations">Consejos para protegerte</string>
+    <string name="information_where_to_go">A dónde ir en una emergencia</string>
+    <string name="information_more_info">Para saber más sobre violencia</string>
+    <!--SELF-DIAGNOSIS-->
+    <string name="self_diagnosis_title">Para saber qué tan peligrosa es tu situación</string>
+    <string name="self_diagnosis_subtitle">Este es un autodiagnóstico para el que tienes que contestar algunas preguntas sencillas</string>
+    <string name="self_diagnosis_description">El autodiagnóstico te ayuda a identificar qué riesgos de violencia estás corriendo en tu casa o entorno cercano.</string>
+    <string name="self_diagnosis_start">Iniciar autodiagnóstico</string>
+    <!--PANIC BUTTON-->
+    <string name="panic_button_title">Botón de emergencia</string>
+    <string name="panic_button_description">Si te sientes en peligro, DESLIZA el botón de abajo para compartir tu ubicación con tu lista de contactos.</string>
+    <string name="panic_button_slide">Desliza para enviar alerta</string>
+    <string name="panic_button">Botón de pánico</string>
+    <string name="panic_cancel">Cerrar</string>
+</resources>

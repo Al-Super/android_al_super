@@ -26,6 +26,8 @@ import com.centroi.alsuper.core.data.LandingPageRepository
 import com.centroi.alsuper.core.data.DefaultLandingPageRepository
 import com.centroi.alsuper.core.data.EmergencyContactsRepository
 import com.centroi.alsuper.core.data.EmergencyContactsRepositoryImpl
+import com.centroi.alsuper.core.database.tables.EmergencyContact
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -51,6 +53,33 @@ class FakeLandingPageRepository @Inject constructor() : LandingPageRepository {
 
     override suspend fun add(name: String) {
         throw NotImplementedError()
+    }
+}
+
+class FakeEmergencyContactsRepository @Inject constructor() : EmergencyContactsRepository {
+
+    val insertedContacts = mutableListOf<EmergencyContact>()
+    private val contacts = MutableStateFlow<List<EmergencyContact>>(emptyList())
+
+    override fun getEmergencyContacts(): Flow<List<EmergencyContact>> = contacts
+
+    override suspend fun insertContact(contact: EmergencyContact) {
+        insertedContacts.add(contact)
+        contacts.value = contacts.value + contact
+    }
+
+    override suspend fun deleteContact(contact: EmergencyContact) {
+        contacts.value = contacts.value - contact
+    }
+
+    override suspend fun updateContact(contact: EmergencyContact) {
+        contacts.value = contacts.value.map {
+            if (it.id == contact.id) contact else it
+        }
+    }
+
+    override suspend fun getContactById(contactId: Int): EmergencyContact? {
+        return contacts.value.find { it.id == contactId }
     }
 }
 

@@ -16,7 +16,8 @@ interface EmergencyContactsRepository {
 }
 
 
-class EmergencyContactsRepositoryImpl @Inject constructor(private val dao: EmergencyContactDao) : EmergencyContactsRepository {
+class EmergencyContactsRepositoryImpl @Inject constructor(private val dao: EmergencyContactDao)
+    : EmergencyContactsRepository {
     override fun getEmergencyContacts(): Flow<List<EmergencyContact>> {
         return dao.getEmergencyContacts()
     }
