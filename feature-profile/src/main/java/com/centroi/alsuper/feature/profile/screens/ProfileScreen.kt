@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.centroi.alsuper.core.ui.AlSuperTheme
 import com.centroi.alsuper.core.ui.Dimens
+import com.centroi.alsuper.core.ui.LocalFontWeight
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
 import com.centroi.alsuper.core.ui.components.container.AlSuperCard
@@ -29,18 +30,22 @@ import com.centroi.alsuper.core.ui.components.container.AlSuperCircularContainer
 @Composable
 fun ProfileScreen() {
     val spacing = LocalSpacing.current
+    val fontWeight = LocalFontWeight.current
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(spacing.space3x)
     ) {
         ProfileDataContainer(spacing)
-        ProfileActions(spacing)
+        ProfileActions(spacing, fontWeight)
     }
 }
 
 @Composable
-private fun ProfileActions(spacing: Dimens) {
+private fun ProfileActions(
+    spacing: Dimens,
+    fontWeight: com.centroi.alsuper.core.ui.FontWeight
+) {
     Spacer(
         modifier = Modifier
             .height(spacing.space05x)
@@ -66,7 +71,7 @@ private fun ProfileActions(spacing: Dimens) {
         Text(
             text = stringResource(id = R.string.profile_change_password),
             style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight(400),
+                fontWeight = FontWeight(fontWeight.weight400x),
                 color = MaterialTheme.colorScheme.outline
             )
         )

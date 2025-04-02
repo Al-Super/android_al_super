@@ -78,7 +78,7 @@ internal fun LandingPageScreen(
 }
 
 // Previews
-
+@Suppress("UnusedPrivateMember")
 @Preview(showBackground = true)
 @Composable
 private fun DefaultPreview() {
@@ -87,6 +87,7 @@ private fun DefaultPreview() {
     }
 }
 
+@Suppress("UnusedPrivateMember")
 @Preview(showBackground = true, widthDp = 480)
 @Composable
 private fun PortraitPreview() {

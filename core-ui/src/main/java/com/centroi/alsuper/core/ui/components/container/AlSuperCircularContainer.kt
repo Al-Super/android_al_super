@@ -34,7 +34,7 @@ fun AlSuperCircularContainer(
     ) {
         Text(
             text = initials.uppercase(),
-            fontSize = (size.value / 2.5).sp, // Dynamically adjust text size
+            fontSize = (size.value / FONT_SIZE_ADJUST).sp, // Dynamically adjust text size
             fontWeight = FontWeight.Bold,
             color = textColor
         )

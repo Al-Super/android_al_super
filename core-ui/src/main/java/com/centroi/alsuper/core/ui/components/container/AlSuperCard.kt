@@ -42,9 +42,16 @@ fun PreviewFakeCustomCard() {
         AlSuperCard(elevation = 4.dp) {
             Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
 
-                Text(text = "Title", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = "Title",
+                    style = MaterialTheme.typography.titleMedium
+                )
 
-                Text(text = "Subtitle", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    text = "Subtitle",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
                 Spacer(modifier = Modifier.height(8.dp))
             }

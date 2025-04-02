@@ -16,7 +16,6 @@
 
 package com.centroi.alsuper.data
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -30,7 +29,6 @@ import com.centroi.alsuper.core.database.LandingPageDao
 /**
  * Unit tests for [DefaultLandingPageRepository].
  */
-@OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
 class DefaultLandingPageRepositoryTest {
 
     @Test

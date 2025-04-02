@@ -18,6 +18,7 @@ enum class Routes {
     EditContactScreen
 }
 
+@Suppress("MaxLineLength")
 sealed class BottomNavItem(val route: String, @StringRes val labelResId: Int, @DrawableRes val iconResId: Int) {
     object FakeHome : BottomNavItem(Routes.FakeHomeScreen.name, R.string.bottom_bar_home, R.drawable.ic_home)
     object Cart : BottomNavItem(Routes.CartScreen.name, R.string.bottom_bar_cart, R.drawable.ic_basket)

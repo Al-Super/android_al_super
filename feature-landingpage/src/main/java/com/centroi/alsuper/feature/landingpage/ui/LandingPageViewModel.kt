@@ -31,6 +31,8 @@ import com.centroi.alsuper.feature.landingpage.ui.LandingPageUiState.Loading
 import com.centroi.alsuper.feature.landingpage.ui.LandingPageUiState.Success
 import javax.inject.Inject
 
+private const val TIME = 5000
+
 @HiltViewModel
 class LandingPageViewModel @Inject constructor(
     private val landingPageRepository: LandingPageRepository
@@ -39,7 +41,7 @@ class LandingPageViewModel @Inject constructor(
     val uiState: StateFlow<LandingPageUiState> = landingPageRepository
         .landingPages.map<List<String>, LandingPageUiState> { Success(data = it) }
         .catch { emit(Error(it)) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(TIME.toLong()), Loading)
 
     fun addLandingPage(name: String) {
         viewModelScope.launch {

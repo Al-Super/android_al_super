@@ -34,7 +34,7 @@ fun PhoneNumberTextField(
     OutlinedTextField(
         value = phoneNumber,
         onValueChange = { newValue ->
-            phoneNumber = newValue.take(10) // Limit input to 10 digits
+            phoneNumber = newValue.take(PHONE_LENGHT) // Limit input to 10 digits
             onValueChange(phoneNumber)
         },
         label = { Text(stringResource(R.string.registration_phone)) },

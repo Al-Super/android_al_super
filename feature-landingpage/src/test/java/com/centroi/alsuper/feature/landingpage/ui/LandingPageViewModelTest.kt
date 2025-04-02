@@ -33,7 +33,6 @@ import com.centroi.alsuper.feature.landingpage.ui.LandingPageViewModel
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-@OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
 class LandingPageViewModelTest {
     @Test
     fun uiState_initiallyLoading() = runTest {
