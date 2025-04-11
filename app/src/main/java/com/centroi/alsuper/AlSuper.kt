@@ -18,14 +18,32 @@ package com.centroi.alsuper
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-import leakcanary.LeakCanary
 
 @HiltAndroidApp
 class AlSuper : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        LeakCanary.config = LeakCanary.config.copy(dumpHeap = true)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(true)
+
+        if (BuildTypeUtils.isDebug) {
+            initLeakCanary()
+        }
+    }
+}
+
+
+object BuildTypeUtils {
+    val isDebug: Boolean
+        get() = isDebugBuild()
+
+    private fun isDebugBuild(): Boolean {
+        // This MUST live in the module where BuildConfig is accessible — typically `:app`
+        return try {
+            Class.forName("com.centroi.alsuper.BuildConfig")
+                .getField("DEBUG")
+                .getBoolean(null)
+        } catch (e: Exception) {
+            false
+        }
     }
 }
