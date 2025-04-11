@@ -3,7 +3,9 @@
 <resources>
     <style name="Theme.AlSuper" parent="android:Theme.Material.NoActionBar">
         <!-- Dark mode background color -->
-        <item name="android:windowBackground">@color/splash_background</item>
+        <item name="android:windowBackground">@drawable/night_splash_screen</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
     </style>
 
     <color name="splash_background">#2F2914</color> <!-- Example: Yellow -->
