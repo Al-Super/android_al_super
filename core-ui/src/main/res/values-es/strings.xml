@@ -103,4 +103,9 @@
     <string name="panic_button_slide">Desliza para enviar alerta</string>
     <string name="panic_button">Botón de pánico</string>
     <string name="panic_cancel">Cerrar</string>
+    <!--PERMISSIONS-->
+    <string name="location_authorization_title">Permítenos usar tu ubicación</string>
+    <string name="location_authorization_message">Si permites que la app sepa tu ubicación, tus contactos sabrán dónde encontrarte.</string>
+    <string name="location_authorization_accept">Aceptar</string>
+    <string name="location_authorization_deny">Cancelar</string>
 </resources>

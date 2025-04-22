@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.centroi.alsuper.CONTACT_ID
+import com.centroi.alsuper.RequestLocationPermission
 import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.feature.auth.screens.LoginScreen
 import com.centroi.alsuper.feature.auth.screens.RegistrationScreen
@@ -42,7 +43,10 @@ fun MainNavigation(
 ) {
     NavHost(navController = navController, startDestination = Routes.StartingPointScreen.name) {
         composable(Routes.MainScreen.name) { LandingPageScreen(modifier = Modifier.padding(16.dp)) }
-        composable(Routes.StartingPointScreen.name) { StartingPointScreen(navController = navController) }
+        composable(Routes.StartingPointScreen.name) {
+            RequestLocationPermission() {}
+            StartingPointScreen(navController = navController)
+        }
         composable(Routes.LoginScreen.name) {
             LoginScreen(navController = navController, loginCallback = loginCallback)
         }

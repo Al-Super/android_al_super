@@ -103,4 +103,9 @@
     <string name="panic_button_slide">Slide to send alert</string>
     <string name="panic_button">Panic button</string>
     <string name="panic_cancel">Close </string>
+    <!--PERMISSIONS-->
+    <string name="location_authorization_title">Allow us to use your location</string>
+    <string name="location_authorization_message">If you allow the app to know your location, your contacts will know where to find you.</string>
+    <string name="location_authorization_accept">Allow</string>
+    <string name="location_authorization_deny">Cancel</string>
 </resources>
