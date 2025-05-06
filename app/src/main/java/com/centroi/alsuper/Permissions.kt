@@ -15,11 +15,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.centroi.alsuper.core.ui.R
 
 @Composable
 fun RequestLocationPermission(
+    shouldShowRationaleOverride: Boolean? = null,
+    launcherOverride: ((Array<String>) -> Unit)? = null,
     onPermissionGranted: () -> Unit
 ) {
     val context = LocalContext.current
@@ -40,13 +43,19 @@ fun RequestLocationPermission(
         if (granted) onPermissionGranted()
     }
 
+    val effectiveLauncher = launcherOverride ?: { launcher.launch(it) }
+
     LaunchedEffect(Unit) {
         val fineGranted = ContextCompat.checkSelfPermission(context, locationPermissions[0]) == PackageManager.PERMISSION_GRANTED
         val coarseGranted = ContextCompat.checkSelfPermission(context, locationPermissions[1]) == PackageManager.PERMISSION_GRANTED
 
         if (!fineGranted && !coarseGranted) {
             // always show dialog
-            showRationale = true
+            val shouldShow = shouldShowRationaleOverride ?: locationPermissions.any { perm ->
+                ActivityCompat.shouldShowRequestPermissionRationale(activity ?: return@LaunchedEffect, perm)
+            }
+            //showRationale = true
+            showRationale = shouldShow
         } else {
             onPermissionGranted()
         }
@@ -57,7 +66,8 @@ fun RequestLocationPermission(
             onDismissRequest = { showRationale = false },
             confirmButton = {
                 TextButton(onClick = {
-                    launcher.launch(locationPermissions)
+                    //launcher.launch(locationPermissions)
+                    effectiveLauncher(locationPermissions)
                     showRationale = false
                 }) {
                     Text(stringResource(R.string.location_authorization_accept))

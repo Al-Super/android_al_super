@@ -28,6 +28,7 @@ mockito = "5.10.0"
 mockitoKotlin = "5.2.0"
 mockitoInline = "5.0.0"
 androidxArchCoreTesting = "2.2.0"
+uiTestJunit4Android = "1.8.0"
 
 
 [libraries]
@@ -75,6 +76,7 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 androidx-arch-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "androidxArchCoreTesting" }
+androidx-ui-test-junit4-android = { group = "androidx.compose.ui", name = "ui-test-junit4-android", version.ref = "uiTestJunit4Android" }
 
 
 [plugins]
