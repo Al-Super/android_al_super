@@ -17,6 +17,7 @@
 package com.centroi.alsuper
 
 import android.app.Application
+import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -42,7 +43,8 @@ object BuildTypeUtils {
             Class.forName("com.centroi.alsuper.BuildConfig")
                 .getField("DEBUG")
                 .getBoolean(null)
-        } catch (e: Exception) {
+        } catch (e: ReflectiveOperationException) {
+            Log.w("BuildTypeUtils", "Failed to determine debug build via reflection", e)
             false
         }
     }

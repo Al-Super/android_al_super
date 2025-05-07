@@ -31,11 +31,14 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {
+
+    @Singleton
     @Provides
     fun provideLandingPageDao(appDatabase: AppDatabase): LandingPageDao {
         return appDatabase.landingPageDao()
     }
 
+    @Singleton
     @Provides
     fun provideEmergencyContactDao(appDatabase: AppDatabase): EmergencyContactDao {
         return appDatabase.emergencyContactDao()

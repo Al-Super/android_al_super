@@ -56,6 +56,7 @@ dependencies {
 
     // Arch Components
     implementation(libs.hilt.android)
+    androidTestImplementation(libs.hilt.android.testing)
     kapt(libs.hilt.compiler)
 
     implementation(libs.kotlinx.coroutines.android)

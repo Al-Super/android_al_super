@@ -34,6 +34,7 @@ fun RequestLocationPermission(
     )
 
     var showRationale by remember { mutableStateOf(false) }
+    var shouldLaunchSystemDialog by remember { mutableStateOf(false) }
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -46,16 +47,25 @@ fun RequestLocationPermission(
     val effectiveLauncher = launcherOverride ?: { launcher.launch(it) }
 
     LaunchedEffect(Unit) {
-        val fineGranted = ContextCompat.checkSelfPermission(context, locationPermissions[0]) == PackageManager.PERMISSION_GRANTED
-        val coarseGranted = ContextCompat.checkSelfPermission(context, locationPermissions[1]) == PackageManager.PERMISSION_GRANTED
+        val fineGranted = ContextCompat.checkSelfPermission(
+            context,
+            locationPermissions[0]
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarseGranted = ContextCompat.checkSelfPermission(
+            context,
+            locationPermissions[1]
+        ) == PackageManager.PERMISSION_GRANTED
 
         if (!fineGranted && !coarseGranted) {
-            // always show dialog
             val shouldShow = shouldShowRationaleOverride ?: locationPermissions.any { perm ->
                 ActivityCompat.shouldShowRequestPermissionRationale(activity ?: return@LaunchedEffect, perm)
             }
-            //showRationale = true
-            showRationale = shouldShow
+
+            if (shouldShow) {
+                showRationale = true
+            } else {
+                shouldLaunchSystemDialog = true
+            }
         } else {
             onPermissionGranted()
         }
@@ -66,9 +76,8 @@ fun RequestLocationPermission(
             onDismissRequest = { showRationale = false },
             confirmButton = {
                 TextButton(onClick = {
-                    //launcher.launch(locationPermissions)
-                    effectiveLauncher(locationPermissions)
                     showRationale = false
+                    effectiveLauncher(locationPermissions)
                 }) {
                     Text(stringResource(R.string.location_authorization_accept))
                 }
