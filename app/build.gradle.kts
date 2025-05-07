@@ -130,6 +130,11 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.square.leakcanary)
 
+    // Mockito dependencies
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.inline) // Enables mocking final classes
+
     // Testing
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.junit)
