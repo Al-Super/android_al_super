@@ -28,7 +28,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Al Super"
+rootProject.name = "Al Súper"
 
 include(":app")
 include(":core-data")
@@ -41,3 +41,4 @@ include(":feature-auth")
 include(":feature-fakeapp")
 include(":feature-profile")
 include(":feature-contacts")
+include(":core-worker")

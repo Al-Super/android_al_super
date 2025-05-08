@@ -26,9 +26,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +39,9 @@ import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.core.ui.YellowBrown
 import com.centroi.alsuper.core.ui.components.navigation.bottomNavigation.AlSuperBottomNavigationBar
 import com.centroi.alsuper.core.ui.components.navigation.AlSuperTopNavigationBar
+import com.centroi.alsuper.core.worker.LocationWorkManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -53,6 +58,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    val context = LocalContext.current
     val signedIn = remember { mutableStateOf(false) }
     val onFakeApp = remember { mutableStateOf(true) }
 
@@ -93,6 +99,13 @@ fun MainScreen() {
                 )
             }
             Log.d("MainScreen", "MainScreen: $innerPadding")
+        }
+    }
+
+    //TODO put this behind an if that validates that user is logged in
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            LocationWorkManager.ensureScheduled(context)
         }
     }
 }

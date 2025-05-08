@@ -57,9 +57,16 @@ fun RequestLocationPermission(
         ) == PackageManager.PERMISSION_GRANTED
 
         if (!fineGranted && !coarseGranted) {
-            val shouldShow = shouldShowRationaleOverride ?: locationPermissions.any { perm ->
+
+            val shouldShowSystemRationale = locationPermissions.any { perm ->
                 ActivityCompat.shouldShowRequestPermissionRationale(activity ?: return@LaunchedEffect, perm)
             }
+           /* val shouldShow = shouldShowRationaleOverride ?: locationPermissions.any { perm ->
+                ActivityCompat.shouldShowRequestPermissionRationale(activity ?: return@LaunchedEffect, perm)
+            }*/
+
+            // 🟢 Force rationale to show unless explicitly overridden to false
+            val shouldShow = shouldShowRationaleOverride ?: true
 
             if (shouldShow) {
                 showRationale = true
@@ -70,6 +77,14 @@ fun RequestLocationPermission(
             onPermissionGranted()
         }
     }
+
+   /* // Automatically launch system permission dialog when needed
+    if (shouldLaunchSystemDialog) {
+        LaunchedEffect("launchSystemDialog") {
+            shouldLaunchSystemDialog = false
+            effectiveLauncher(locationPermissions)
+        }
+    }*/
 
     if (showRationale) {
         AlertDialog(
