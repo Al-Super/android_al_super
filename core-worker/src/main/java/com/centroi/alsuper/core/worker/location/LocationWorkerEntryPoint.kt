@@ -1,4 +1,4 @@
-package com.centroi.alsuper.core.worker
+package com.centroi.alsuper.core.worker.location
 
 import com.centroi.alsuper.core.data.repositories.LocationRepository
 import dagger.hilt.EntryPoint
@@ -9,4 +9,5 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 interface LocationWorkerEntryPoint {
     fun locationRepository(): LocationRepository
+    fun locationProvider(): LocationProvider
 }

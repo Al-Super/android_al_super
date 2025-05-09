@@ -1,4 +1,4 @@
-package com.centroi.alsuper.core.worker
+package com.centroi.alsuper.core.worker.location
 
 import android.content.Context
 import androidx.work.Constraints
@@ -6,6 +6,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.centroi.alsuper.core.worker.WORK_TIME
 import java.util.concurrent.TimeUnit
 
 object LocationWorkManager {
@@ -30,7 +31,7 @@ object LocationWorkManager {
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        val request = PeriodicWorkRequestBuilder<LocationWorker>(WORK_TIME, TimeUnit.MINUTES)
+        val request = PeriodicWorkRequestBuilder<LocationWorker>(WORK_TIME.toLong(), TimeUnit.MINUTES)
             .setConstraints(constraints)
             .build()
 

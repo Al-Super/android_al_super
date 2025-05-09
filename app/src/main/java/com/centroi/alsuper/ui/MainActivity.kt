@@ -36,10 +36,9 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import com.centroi.alsuper.core.ui.AlSuperTheme
 import com.centroi.alsuper.core.ui.Routes
-import com.centroi.alsuper.core.ui.YellowBrown
 import com.centroi.alsuper.core.ui.components.navigation.bottomNavigation.AlSuperBottomNavigationBar
 import com.centroi.alsuper.core.ui.components.navigation.AlSuperTopNavigationBar
-import com.centroi.alsuper.core.worker.LocationWorkManager
+import com.centroi.alsuper.core.worker.location.LocationWorkManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

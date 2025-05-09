@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.work.testing)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -66,6 +67,11 @@ dependencies {
     implementation(libs.androidx.material3.adaptive.navigation.suite.android)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    // Mockito dependencies
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.inline) // Enables mocking final classes
 
     // Tooling
     debugImplementation(libs.androidx.compose.ui.tooling)
