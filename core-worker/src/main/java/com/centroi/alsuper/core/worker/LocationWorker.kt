@@ -26,43 +26,44 @@ class LocationWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         val fusedClient = LocationServices.getFusedLocationProviderClient(applicationContext)
-        val permission = ActivityCompat.checkSelfPermission(
-            applicationContext, Manifest.permission.ACCESS_FINE_LOCATION
-        )
         val repo = EntryPointAccessors.fromApplication(
             applicationContext,
             LocationWorkerEntryPoint::class.java
         ).locationRepository()
 
-        //if (permission != PackageManager.PERMISSION_GRANTED) return Result.failure()
-        if (permission != PackageManager.PERMISSION_GRANTED) {
+        val result = if (ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             Log.w("LocationWorker", "Location permission not granted.")
-            return Result.success() // Don't block future jobs
-        }
-
-        val location = try {
-            suspendCancellableCoroutine<Location?> { cont ->
-                fusedClient.lastLocation
-                    .addOnSuccessListener { cont.resume(it, null) }
-                    .addOnFailureListener {
-                        Log.e("LocationWorker", "Failed to get location", it)
-                        cont.resume(null, null)
-                    }
+            Result.success()
+        } else {
+            val location = try {
+                suspendCancellableCoroutine<Location?> { cont ->
+                    fusedClient.lastLocation
+                        .addOnSuccessListener { cont.resume(it, null) }
+                        .addOnFailureListener {
+                            Log.e("LocationWorker", "Failed to get location", it)
+                            cont.resume(null, null)
+                        }
+                }
+            } catch (e: SecurityException) {
+                Log.e("LocationWorker", "Location permission missing", e)
+                null
+            } catch (e: IllegalStateException) {
+                Log.e("LocationWorker", "Location service unavailable", e)
+                null
             }
-        } catch (e: SecurityException) {
-            Log.e("LocationWorker", "Location permission missing", e)
-            return Result.success()
-        } catch (e: IllegalStateException) {
-            Log.e("LocationWorker", "Location service unavailable", e)
-            return Result.success()
+
+            location?.let {
+                Log.d("LocationWorker", "Location: ${it.latitude}, ${it.longitude}")
+                repo.saveLocation(it.latitude, it.longitude)
+            }
+
+            Result.success()
         }
 
-        location?.let {
-            // Send lat/lon to backend
-            Log.d("LocationWorker", "Location: ${it.latitude}, ${it.longitude}")
-            repo.saveLocation(it.latitude, it.longitude)
-        }
-
-        return Result.success()
+        return result
     }
 }
