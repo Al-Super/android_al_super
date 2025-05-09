@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.centroi.alsuper.core.ui.R
 
+@Suppress("LongMethod")
 @Composable
 fun RequestLocationPermission(
     shouldShowRationaleOverride: Boolean? = null,
@@ -58,9 +59,9 @@ fun RequestLocationPermission(
 
         if (!fineGranted && !coarseGranted) {
 
-            val shouldShowSystemRationale = locationPermissions.any { perm ->
+           /* val shouldShowSystemRationale = locationPermissions.any { perm ->
                 ActivityCompat.shouldShowRequestPermissionRationale(activity ?: return@LaunchedEffect, perm)
-            }
+            }*/
            /* val shouldShow = shouldShowRationaleOverride ?: locationPermissions.any { perm ->
                 ActivityCompat.shouldShowRequestPermissionRationale(activity ?: return@LaunchedEffect, perm)
             }*/

@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.hilt.gradle)
     id("jacoco")
 }
 
@@ -17,6 +18,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+    }
+
+    kapt {
+        correctErrorTypes = true
     }
 
     buildFeatures {
@@ -37,15 +42,17 @@ android {
 }
 
 dependencies {
+    implementation(project(":core-data"))
+    implementation(project(":core-database"))
     implementation(libs.play.services.location)
     implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.work.runtime.ktx)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
     // Core Android dependencies
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.work.runtime.ktx)
 
     // Hilt Dependency Injection
     implementation(libs.hilt.android)

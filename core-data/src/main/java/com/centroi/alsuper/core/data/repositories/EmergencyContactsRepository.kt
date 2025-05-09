@@ -1,4 +1,4 @@
-package com.centroi.alsuper.core.data
+package com.centroi.alsuper.core.data.repositories
 
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import com.centroi.alsuper.core.database.tables.EmergencyContactDao

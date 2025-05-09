@@ -112,6 +112,7 @@ dependencies {
     // Hilt Dependency Injection
     implementation(libs.hilt.android)
     implementation(libs.androidx.ui.test.junit4.android)
+    implementation(libs.androidx.hilt.work)
     kapt(libs.hilt.compiler)
 
     // Arch Components

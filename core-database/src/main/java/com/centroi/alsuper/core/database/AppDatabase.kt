@@ -20,9 +20,19 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import com.centroi.alsuper.core.database.tables.EmergencyContactDao
+import com.centroi.alsuper.core.database.tables.Location
+import com.centroi.alsuper.core.database.tables.LocationDao
 
-@Database(entities = [LandingPage::class, EmergencyContact::class], version = 1)
+@Database(
+    entities = [
+        LandingPage::class,
+        EmergencyContact::class,
+        Location::class
+    ],
+    version = 1
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun landingPageDao(): LandingPageDao
     abstract fun emergencyContactDao(): EmergencyContactDao
+    abstract fun locationDao(): LocationDao
 }

@@ -16,7 +16,13 @@ class LocationPermissionEvaluator(private val context: Context) {
 
     fun shouldShowRationale(): Boolean {
         val activity = context as? Activity ?: return false
-        return ActivityCompat.shouldShowRequestPermissionRationale(activity, "android.permission.ACCESS_FINE_LOCATION") ||
-                ActivityCompat.shouldShowRequestPermissionRationale(activity, "android.permission.ACCESS_COARSE_LOCATION")
+        return ActivityCompat.shouldShowRequestPermissionRationale(
+            activity,
+            "android.permission.ACCESS_FINE_LOCATION"
+        ) ||
+        ActivityCompat.shouldShowRequestPermissionRationale(
+            activity,
+            "android.permission.ACCESS_COARSE_LOCATION"
+        )
     }
 }

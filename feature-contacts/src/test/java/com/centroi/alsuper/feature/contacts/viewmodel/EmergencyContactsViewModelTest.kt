@@ -2,24 +2,12 @@
 
 package com.centroi.alsuper.feature.contacts.viewmodel
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.viewModelScope
-import com.centroi.alsuper.core.data.EmergencyContactsRepository
 import com.centroi.alsuper.core.data.di.FakeEmergencyContactsRepository
-import com.centroi.alsuper.core.data.extensions.EncryptionHelper
 import com.centroi.alsuper.core.database.tables.EmergencyContact
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
 import org.junit.*
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.doReturn
-import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.whenever
 
 class EmergencyContactsViewModelTest {
 

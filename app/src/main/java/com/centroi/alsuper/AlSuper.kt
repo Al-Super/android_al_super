@@ -18,10 +18,16 @@ package com.centroi.alsuper
 
 import android.app.Application
 import android.util.Log
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
+import jakarta.inject.Inject
 
 @HiltAndroidApp
-class AlSuper : Application() {
+class AlSuper : Application(), Configuration.Provider {
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
 
     override fun onCreate() {
         super.onCreate()
@@ -30,6 +36,11 @@ class AlSuper : Application() {
             initLeakCanary()
         }
     }
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }
 
 
