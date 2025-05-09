@@ -24,8 +24,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import com.centroi.alsuper.core.data.LandingPageRepository
 import com.centroi.alsuper.core.data.DefaultLandingPageRepository
-import com.centroi.alsuper.core.data.EmergencyContactsRepository
-import com.centroi.alsuper.core.data.EmergencyContactsRepositoryImpl
+import com.centroi.alsuper.core.data.repositories.EmergencyContactsRepository
+import com.centroi.alsuper.core.data.repositories.EmergencyContactsRepositoryImpl
+import com.centroi.alsuper.core.data.repositories.LocationRepository
+import com.centroi.alsuper.core.data.repositories.LocationRepositoryImpl
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -46,6 +48,12 @@ interface DataModule {
     fun bindsEmergencyContactsRepository(
         emergencyContactsRepository: EmergencyContactsRepositoryImpl
     ): EmergencyContactsRepository
+
+    @Singleton
+    @Binds
+    fun bindLocationRepository(
+        locationRepository: LocationRepositoryImpl
+    ): LocationRepository
 }
 
 class FakeLandingPageRepository @Inject constructor() : LandingPageRepository {

@@ -45,6 +45,8 @@ android {
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -61,6 +63,11 @@ android {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+
+        debug {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
         }
     }
 
@@ -90,6 +97,7 @@ android {
 
 dependencies {
     implementation(project(":core-ui"))
+    implementation(project(":core-worker"))
     implementation(project(":feature-landingpage"))
     implementation(project(":feature-auth"))
     implementation(project(":feature-fakeapp"))
@@ -103,6 +111,8 @@ dependencies {
 
     // Hilt Dependency Injection
     implementation(libs.hilt.android)
+    implementation(libs.androidx.ui.test.junit4.android)
+    implementation(libs.androidx.hilt.work)
     kapt(libs.hilt.compiler)
 
     // Arch Components
@@ -121,6 +131,11 @@ dependencies {
     // Tooling
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.square.leakcanary)
+
+    // Mockito dependencies
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.inline) // Enables mocking final classes
 
     // Testing
     testImplementation(libs.androidx.test.core)

@@ -17,10 +17,17 @@
 package com.centroi.alsuper
 
 import android.app.Application
+import android.util.Log
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
+import jakarta.inject.Inject
 
 @HiltAndroidApp
-class AlSuper : Application() {
+class AlSuper : Application(), Configuration.Provider {
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
 
     override fun onCreate() {
         super.onCreate()
@@ -29,6 +36,11 @@ class AlSuper : Application() {
             initLeakCanary()
         }
     }
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }
 
 
@@ -42,7 +54,8 @@ object BuildTypeUtils {
             Class.forName("com.centroi.alsuper.BuildConfig")
                 .getField("DEBUG")
                 .getBoolean(null)
-        } catch (e: Exception) {
+        } catch (e: ReflectiveOperationException) {
+            Log.w("BuildTypeUtils", "Failed to determine debug build via reflection", e)
             false
         }
     }

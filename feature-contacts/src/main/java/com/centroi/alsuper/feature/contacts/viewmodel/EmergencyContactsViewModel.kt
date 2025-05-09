@@ -3,7 +3,7 @@ package com.centroi.alsuper.feature.contacts.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.centroi.alsuper.core.data.EmergencyContactsRepository
+import com.centroi.alsuper.core.data.repositories.EmergencyContactsRepository
 import com.centroi.alsuper.core.data.extensions.EncryptionHelper
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import com.centroi.alsuper.feature.contacts.MAX_RGB_COLOR
@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import java.security.GeneralSecurityException
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class EmergencyContactsViewModel @Inject constructor(

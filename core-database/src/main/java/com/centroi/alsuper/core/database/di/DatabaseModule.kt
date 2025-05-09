@@ -26,19 +26,29 @@ import dagger.hilt.components.SingletonComponent
 import com.centroi.alsuper.core.database.AppDatabase
 import com.centroi.alsuper.core.database.LandingPageDao
 import com.centroi.alsuper.core.database.tables.EmergencyContactDao
+import com.centroi.alsuper.core.database.tables.LocationDao
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {
+
+    @Singleton
     @Provides
     fun provideLandingPageDao(appDatabase: AppDatabase): LandingPageDao {
         return appDatabase.landingPageDao()
     }
 
+    @Singleton
     @Provides
     fun provideEmergencyContactDao(appDatabase: AppDatabase): EmergencyContactDao {
         return appDatabase.emergencyContactDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideLocationDao(appDatabase: AppDatabase): LocationDao {
+        return appDatabase.locationDao()
     }
 
     @Provides
