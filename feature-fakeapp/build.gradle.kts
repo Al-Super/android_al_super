@@ -36,12 +36,17 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
 }
 
 dependencies {
 
     implementation(project(":core-data"))
     implementation(project(":core-ui"))
+    implementation(project(":core-database"))
     androidTestImplementation(project(":core-testing"))
 
     // Core Android dependencies
@@ -57,10 +62,8 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.material3.adaptive.navigation.suite.android)
     // Tooling
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.kotlinx.serialization.json)
     // Instrumented tests
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
@@ -76,12 +79,21 @@ dependencies {
     kaptTest(libs.hilt.android.compiler)
 
     // Local tests: jUnit, coroutines, Android runner
+    testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.androidx.test.core)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.robolectric)
+
+    // Mockito dependencies
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.inline) // Enables mocking final classes
 
     // Instrumented tests: jUnit rules and runners
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.hilt.navigation.testing)
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {

@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -20,13 +21,14 @@ import com.centroi.alsuper.core.ui.AlSuperTheme
 fun AlSuperCard(
     modifier: Modifier = Modifier,
     elevation: Dp = 0.dp,
+    color: Color? = null, // Optional color for the card
     content: @Composable () -> Unit // Slot for custom content inside the card
 ) {
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = color ?: MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = elevation)

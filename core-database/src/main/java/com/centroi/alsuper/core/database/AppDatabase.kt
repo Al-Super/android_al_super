@@ -22,12 +22,15 @@ import com.centroi.alsuper.core.database.tables.EmergencyContact
 import com.centroi.alsuper.core.database.tables.EmergencyContactDao
 import com.centroi.alsuper.core.database.tables.Location
 import com.centroi.alsuper.core.database.tables.LocationDao
+import com.centroi.alsuper.core.database.tables.Product
+import com.centroi.alsuper.core.database.tables.ProductDao
 
 @Database(
     entities = [
         LandingPage::class,
         EmergencyContact::class,
-        Location::class
+        Location::class,
+        Product::class
     ],
     version = 1
 )
@@ -35,4 +38,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun landingPageDao(): LandingPageDao
     abstract fun emergencyContactDao(): EmergencyContactDao
     abstract fun locationDao(): LocationDao
+    abstract fun productDao(): ProductDao
 }

@@ -27,6 +27,7 @@ import com.centroi.alsuper.core.database.AppDatabase
 import com.centroi.alsuper.core.database.LandingPageDao
 import com.centroi.alsuper.core.database.tables.EmergencyContactDao
 import com.centroi.alsuper.core.database.tables.LocationDao
+import com.centroi.alsuper.core.database.tables.ProductDao
 import javax.inject.Singleton
 
 @Module
@@ -49,6 +50,12 @@ class DatabaseModule {
     @Provides
     fun provideLocationDao(appDatabase: AppDatabase): LocationDao {
         return appDatabase.locationDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideProductsDao(appDatabase: AppDatabase): ProductDao {
+        return appDatabase.productDao()
     }
 
     @Provides
