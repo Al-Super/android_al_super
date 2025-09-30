@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.centroi.alsuper.core.ui.BottomNavItem
+import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.core.ui.fakeBottomNavigation
 import com.centroi.alsuper.core.ui.mainBottomNavigation
 
@@ -23,7 +24,6 @@ fun AlSuperBottomNavigationBar(
 ) {
     val items = if(onFakeApp) fakeBottomNavigation else mainBottomNavigation
     val bottomBarTheme = getBottomBarTheme(onFakeApp)
-
     NavigationBar(
         containerColor = bottomBarTheme.containerColor
     ) {

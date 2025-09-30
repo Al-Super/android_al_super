@@ -15,6 +15,15 @@ data class Dimens(
     val space6x : Dp = 32.dp,
     val space7x : Dp = 40.dp,
     val space9x : Dp = 64.dp,
+    val space10x: Dp = 80.dp,
+    val space12x: Dp = 96.dp,
+    val space14x: Dp = 112.dp,
+    val space16x: Dp = 128.dp,
+    val space18x: Dp = 144.dp,
+    val space20x: Dp = 160.dp,
+    val space24x: Dp = 192.dp,
+    val space28x: Dp = 224.dp,
+    val space32x: Dp = 256.dp,
 
     val imageMedium : Dp = 100.dp,
 

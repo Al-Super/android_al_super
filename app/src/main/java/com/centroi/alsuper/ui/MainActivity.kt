@@ -75,6 +75,7 @@ fun MainScreen(
             topBar = {
                 if (signedIn.value) {
                     AlSuperTopNavigationBar(
+                        navController = navController,
                         onMainNavigation = { onFakeApp.value = it },
                     )
                 }
