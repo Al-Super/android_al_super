@@ -16,18 +16,22 @@
 
 package com.centroi.alsuper.core.data.di
 
+import com.centroi.alsuper.core.data.models.LandingPageData
+import com.centroi.alsuper.core.data.models.LandingPageName
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import com.centroi.alsuper.core.data.LandingPageRepository
-import com.centroi.alsuper.core.data.DefaultLandingPageRepository
+import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageRepository
+import com.centroi.alsuper.core.data.repositories.landingPage.DefaultLandingPageRepository
 import com.centroi.alsuper.core.data.repositories.EmergencyContactsRepository
 import com.centroi.alsuper.core.data.repositories.EmergencyContactsRepositoryImpl
 import com.centroi.alsuper.core.data.repositories.LocationRepository
 import com.centroi.alsuper.core.data.repositories.LocationRepositoryImpl
+import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageDataProviderImpl
+import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageDataProviderInt
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -54,10 +58,16 @@ interface DataModule {
     fun bindLocationRepository(
         locationRepository: LocationRepositoryImpl
     ): LocationRepository
+
+    @Singleton
+    @Binds
+    fun bindLandingPageDataProvider(
+        impl: LandingPageDataProviderImpl
+    ): LandingPageDataProviderInt
 }
 
 class FakeLandingPageRepository @Inject constructor() : LandingPageRepository {
-    override val landingPages: Flow<List<String>> = flowOf(fakeLandingPages)
+    override val landingPages: Flow<List<LandingPageData>> = flowOf(listOf(fakeLandingPages))
 
     override suspend fun add(name: String) {
         throw NotImplementedError()
@@ -91,4 +101,13 @@ class FakeEmergencyContactsRepository @Inject constructor() : EmergencyContactsR
     }
 }
 
-val fakeLandingPages = listOf("One", "Two", "Three")
+val fakeLandingPages = LandingPageData(
+    pageID = LandingPageName.LANDING_PAGE_FIRST,
+    buttonClose = "Close mode",
+    title = "Title",
+    description = "description",
+    text = "Text",
+    checkBoxTermsAndConditions = "Terms and Conditions" ,
+    checkBoxDataConsent = "Data Consent",
+    consentNeeded = false
+)

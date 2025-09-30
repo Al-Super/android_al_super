@@ -16,16 +16,17 @@
 
 package com.centroi.alsuper.feature.landingpage.ui
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.centroi.alsuper.core.data.models.LandingPageData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
-import com.centroi.alsuper.core.data.LandingPageRepository
+import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageRepository
 import com.centroi.alsuper.feature.landingpage.ui.LandingPageUiState.Error
 import com.centroi.alsuper.feature.landingpage.ui.LandingPageUiState.Loading
 import com.centroi.alsuper.feature.landingpage.ui.LandingPageUiState.Success
@@ -35,23 +36,23 @@ private const val TIME = 5000
 
 @HiltViewModel
 class LandingPageViewModel @Inject constructor(
-    private val landingPageRepository: LandingPageRepository
+    private val landingPageRepository: LandingPageRepository,
+    private val landinfPrefs: LandingPagePreferences
 ) : ViewModel() {
 
     val uiState: StateFlow<LandingPageUiState> = landingPageRepository
-        .landingPages.map<List<String>, LandingPageUiState> { Success(data = it) }
+        .landingPages.map<List<LandingPageData>, LandingPageUiState> { Success(data = it) }
         .catch { emit(Error(it)) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(TIME.toLong()), Loading)
 
-    fun addLandingPage(name: String) {
-        viewModelScope.launch {
-            landingPageRepository.add(name)
-        }
+    fun doNotShowOnboardingAgain() {
+        landinfPrefs.doNotShowLandingPageAgain()
     }
+
 }
 
 sealed interface LandingPageUiState {
     object Loading : LandingPageUiState
     data class Error(val throwable: Throwable) : LandingPageUiState
-    data class Success(val data: List<String>) : LandingPageUiState
+    data class Success(val data: List<LandingPageData>) : LandingPageUiState
 }

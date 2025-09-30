@@ -28,6 +28,7 @@ val Pink40 = Color(0xFF7D5260)
 
 val MainYellow = Color(0xFFF0CF37)
 val Yellow = Color(0xFFF1CF37)
+val YellowStrong = Color(0xFFEBD057)
 val YellowSurface = Color(0xFFF7EC90)
 val YellowLight = Color(0xFFFBF6CB)
 val YellowGray = Color(0xFF535144)
