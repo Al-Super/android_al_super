@@ -28,6 +28,7 @@ import com.centroi.alsuper.feature.auth.screens.LoginScreen
 import com.centroi.alsuper.feature.auth.screens.RegistrationScreen
 import com.centroi.alsuper.feature.landingpage.ui.LandingPageScreen
 import com.centroi.alsuper.feature.auth.screens.StartingPointScreen
+import com.centroi.alsuper.feature.chat.ChatScreen
 import com.centroi.alsuper.feature.contacts.screens.AddContactScreen
 import com.centroi.alsuper.feature.contacts.screens.ContactsListScreen
 import com.centroi.alsuper.feature.contacts.screens.EditContactScreen
@@ -65,7 +66,7 @@ fun MainNavigation(
         composable(Routes.ContactsListScreen.name) { ContactsListScreen(navController = navController) }
         composable(Routes.AddContactScreen.name) { AddContactScreen(navController = navController) }
         composable(Routes.InformationScreen.name) { InformationScreen() }
-        composable(Routes.SelfDiagnosisScreen.name) {  }
+        composable(Routes.SelfDiagnosisScreen.name) { ChatScreen() }
         composable(Routes.ContactsListScreen.name) {  }
         composable("${Routes.EditContactScreen.name}/{$CONTACT_ID}",) { backStackEntry ->
             val contactId = backStackEntry.arguments?.getString(CONTACT_ID)?.toIntOrNull()

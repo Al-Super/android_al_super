@@ -104,6 +104,7 @@ dependencies {
     implementation(project(":feature-profile"))
     implementation(project(":feature-contacts"))
     implementation(project(":feature-information"))
+    implementation(project(":feature-chat"))
 
     // Core Android dependencies
     implementation(libs.androidx.core.ktx)
