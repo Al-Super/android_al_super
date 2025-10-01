@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.centroi.alsuper.core.ui.AlSuperTheme
+import com.centroi.alsuper.core.ui.Brown
 import com.centroi.alsuper.core.ui.Dimens
 import com.centroi.alsuper.core.ui.LocalFontWeight
 import com.centroi.alsuper.core.ui.LocalSpacing
@@ -35,8 +36,10 @@ fun ProfileScreen() {
     val fontWeight = LocalFontWeight.current
     Column(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .padding(spacing.space3x)
+
     ) {
         ProfileDataContainer(spacing, fontWeight)
         ProfileActions(spacing, fontWeight)
@@ -132,7 +135,7 @@ private fun ProfileDataContainer(
     ) {
         Column(
             modifier = Modifier
-                .background(YellowStrong)
+                .background(MaterialTheme.colorScheme.onTertiaryContainer)
                 .padding(spacing.space3x)
         ) {
             Row(

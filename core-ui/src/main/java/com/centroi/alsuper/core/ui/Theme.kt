@@ -63,6 +63,8 @@ private val FakeColorScheme = lightColorScheme(
     surface = YellowLight,
     onSurface = Black,
     surfaceVariant = White,
+    onTertiary = MainYellow,
+    onTertiaryContainer = MainYellow,
     onSurfaceVariant = Black,
     outline = PurpleGray,
     surfaceTint = Orange
@@ -115,6 +117,7 @@ private val RealColorScheme = lightColorScheme(
     onSurface = White,
     surfaceVariant = White,
     onSurfaceVariant = BrownLight,
+    onTertiaryContainer = Brown,
     outline = YellowLight,
     surfaceTint = YellowPastel
 

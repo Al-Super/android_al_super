@@ -103,6 +103,7 @@ dependencies {
     implementation(project(":feature-fakeapp"))
     implementation(project(":feature-profile"))
     implementation(project(":feature-contacts"))
+    implementation(project(":feature-information"))
 
     // Core Android dependencies
     implementation(libs.androidx.core.ktx)
