@@ -16,6 +16,7 @@
 package com.centroi.alsuper.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -44,31 +45,32 @@ fun MainNavigation(
     shouldShowLandingPage: Boolean,
     onChangeAppTheme: MutableState<Boolean>
 ) {
-    val startDestination = getStartDestination(shouldShowLandingPage)
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(Routes.MainScreen.name) {
-            LandingPageScreen(
-                modifier = Modifier,
-                onChangeAppTheme = onChangeAppTheme
+    NavHost(navController = navController, startDestination = Routes.SplashScreen.name) {
+        composable(Routes.SplashScreen.name) {
+            SplashScreen(
+                navController = navController,
+                shouldShowLandingPage = shouldShowLandingPage
             )
         }
-        composable(Routes.StartingPointScreen.name) {
-            RequestLocationPermission() {}
-            StartingPointScreen(navController = navController)
+        composable(Routes.MainScreen.name) {
+            LandingPageScreen(
+                onChangeAppTheme = onChangeAppTheme,
+                navController = navController
+            )
         }
         composable(Routes.LoginScreen.name) {
             LoginScreen(navController = navController, loginCallback = loginCallback)
         }
         composable(Routes.RegistrationScreen.name) { RegistrationScreen(navController = navController) }
-        composable(Routes.FakeHomeScreen.name) { FakeHomeScreen() }
-        composable(Routes.CartScreen.name) { CartScreen() }
+        composable(Routes.FakeHomeScreen.name) { FakeHomeScreen(navController) }
+        composable(Routes.CartScreen.name) { CartScreen(navController) }
         composable(Routes.ProfileScreen.name) { ProfileScreen() }
         composable(Routes.ContactsListScreen.name) { ContactsListScreen(navController = navController) }
         composable(Routes.AddContactScreen.name) { AddContactScreen(navController = navController) }
         composable(Routes.InformationScreen.name) { InformationScreen() }
         composable(Routes.SelfDiagnosisScreen.name) { ChatScreen() }
-        composable(Routes.ContactsListScreen.name) {  }
-        composable("${Routes.EditContactScreen.name}/{$CONTACT_ID}",) { backStackEntry ->
+        composable(Routes.FakeArticleScreen.name) {  }
+        composable("${Routes.EditContactScreen.name}/{$CONTACT_ID}") { backStackEntry ->
             val contactId = backStackEntry.arguments?.getString(CONTACT_ID)?.toIntOrNull()
             contactId?.let {
                 EditContactScreen(navController = navController, contactId = it)
@@ -77,10 +79,22 @@ fun MainNavigation(
     }
 }
 
-private fun getStartDestination(shouldShowLandingPage: Boolean): String {
-    return if (shouldShowLandingPage) {
-        Routes.MainScreen.name
-    } else {
-        Routes.StartingPointScreen.name
+@Composable
+private fun SplashScreen(
+    navController: NavHostController,
+    shouldShowLandingPage: Boolean
+) {
+    LaunchedEffect(Unit) {
+        val destination = if (shouldShowLandingPage) {
+            Routes.MainScreen.name
+        } else {
+            Routes.LoginScreen.name
+        }
+
+        navController.navigate(destination) {
+            popUpTo(Routes.SplashScreen.name) {
+                inclusive = true
+            }
+        }
     }
 }

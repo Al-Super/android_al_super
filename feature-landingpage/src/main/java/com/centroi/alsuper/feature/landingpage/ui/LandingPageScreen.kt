@@ -16,6 +16,7 @@
 
 package com.centroi.alsuper.feature.landingpage.ui
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,8 +34,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -42,19 +45,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.centroi.alsuper.core.data.models.LandingPageData
 import com.centroi.alsuper.core.data.models.LandingPageName
 import com.centroi.alsuper.core.ui.AlSuperTheme
 import com.centroi.alsuper.core.ui.LocalSpacing
+import com.centroi.alsuper.core.ui.Routes
 
 @Composable
 fun LandingPageScreen(
-    modifier: Modifier = Modifier,
     viewModel: LandingPageViewModel = hiltViewModel(),
-    onChangeAppTheme: MutableState<Boolean>
+    onChangeAppTheme: MutableState<Boolean>,
+    navController: NavController
 ) {
     AlSuperTheme(
         isFakeApp = false,
@@ -64,9 +72,9 @@ fun LandingPageScreen(
         if (items is Success) {
             LandingPageScreen(
                 items = (items as Success).data,
-                modifier = modifier,
                 onChangeAppTheme = onChangeAppTheme,
-                viewModel = viewModel
+                viewModel = viewModel,
+                navController = navController
             )
         }
     }
@@ -75,9 +83,9 @@ fun LandingPageScreen(
 @Composable
 internal fun LandingPageScreen(
     items: List<LandingPageData>,
-    modifier: Modifier = Modifier,
     onChangeAppTheme: MutableState<Boolean>,
-    viewModel: LandingPageViewModel
+    viewModel: LandingPageViewModel,
+    navController: NavController
 ) {
     val goToNextPage = remember { mutableStateOf(false) }
     val showPagDotsAndButton = remember { mutableStateOf(true) }
@@ -97,7 +105,7 @@ internal fun LandingPageScreen(
             goToNextPage.value = false
         }
     }
-    Column(modifier) {
+    Column(Modifier.background(MaterialTheme.colorScheme.onSecondaryContainer)) {
         HorizontalPager(
             modifier = Modifier
                 .fillMaxWidth()
@@ -135,6 +143,14 @@ internal fun LandingPageScreen(
                     }
                     if(items[pagerState.currentPage].pageID == LandingPageName.LANDING_PAGE_SIXTH){
                         viewModel.doNotShowOnboardingAgain()
+                        navController.navigate(Routes.LoginScreen.name) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true
+                            }
+
+                            launchSingleTop = true
+                        }
+                        onChangeAppTheme.value = true
                     } else {
                         goToNextPage.value = true
                     }

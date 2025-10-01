@@ -11,13 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import com.centroi.alsuper.core.ui.Brown
@@ -56,7 +56,8 @@ fun InformationSectionCard(
             Text(
                 text = title,
                 fontSize = 20.sp,
-                fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+                fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onPrimary
             )
             Image(
                 painter = painterResource(com.centroi.alsuper.core.ui.R.drawable.ic_arrow_right),

@@ -33,7 +33,12 @@ fun LoginScreen(
         navigateToRegister = { navController.navigate(Routes.RegistrationScreen.name) { launchSingleTop = true} },
         loginCallback = {
             loginCallback(it)
-            navController.navigate(Routes.FakeHomeScreen.name) { launchSingleTop = true}
+            navController.navigate(Routes.FakeHomeScreen.name) {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+                launchSingleTop = true
+            }
         }
     )
 }

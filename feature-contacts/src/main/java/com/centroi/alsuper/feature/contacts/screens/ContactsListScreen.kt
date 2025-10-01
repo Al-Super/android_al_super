@@ -73,6 +73,7 @@ internal fun ContactsListScreen(
     val spacing = LocalSpacing.current
     Column(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .padding(spacing.space3x),
         verticalArrangement = Arrangement.spacedBy(spacing.space3x)
