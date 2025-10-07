@@ -48,6 +48,7 @@ class LandingPageDataProviderImpl @Inject constructor(
             pageID = LandingPageName.LANDING_PAGE_SIXTH,
             title = context.getString(R.string.LANDING_PAGE_SIX_TITLE),
             description = context.getString(R.string.LANDING_PAGE_SIX_DESCRIPTION),
+            text = context.getString(R.string.LANDING_PAGE_SIX_TEXT),
             checkBoxTermsAndConditions = context.getString(R.string.LANDING_PAGE_SIX_TERMS_AND_CONDITIONS),
             checkBoxDataConsent = context.getString(R.string.LANDING_PAGE_SIX_DATA_CONSENT),
             consentNeeded = true
