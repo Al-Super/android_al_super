@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- BUTTON -->
+    <string name="LANDING_PAGE_BUTTON">Siguiente</string>
+    <string name="LANDING_PAGE_CLOSE_BUTTON">Cerrar modo</string>
+    <!-- LANDING PAGE ONE -->
+    <string name="LANDING_PAGE_ONE_TITLE">Sign in</string>
+    <string name="LANDING_PAGE_ONE_DESCRIPTION">Sign in</string>
+    <!-- LANDING PAGE TWO -->
+    <string name="LANDING_PAGE_TWO_TITLE">Sign in</string>
+    <string name="LANDING_PAGE_TWO_DESCRIPTION">Sign in</string>
+    <string name="LANDING_PAGE_TWO_TEXT">Sign in</string>
+    <!-- LANDING PAGE THREE -->
+    <string name="LANDING_PAGE_THREE_TITLE">Sign in</string>
+    <string name="LANDING_PAGE_THREE_DESCRIPTION">Sign in</string>
+    <!-- LANDING PAGE FOUR -->
+    <string name="LANDING_PAGE_FOUR_TITLE">Sign in</string>
+    <string name="LANDING_PAGE_FOUR_DESCRIPTION">Sign in</string>
+    <!-- LANDING PAGE FIFTH -->
+    <string name="LANDING_PAGE_FIVE_TITLE">Sign in</string>
+    <string name="LANDING_PAGE_FIVE_DESCRIPTION">Sign in</string>
+    <!-- LANDING PAGE SIXTH -->
+    <string name="LANDING_PAGE_SIX_TITLE">Sign in</string>
+    <string name="LANDING_PAGE_SIX_DESCRIPTION">Sign in</string>
+    <string name="LANDING_PAGE_SIX_TERMS_AND_CONDITIONS">Sign in</string>
+    <string name="LANDING_PAGE_SIX_DATA_CONSENT">Sign in</string>
+</resources>

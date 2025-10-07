@@ -17,14 +17,13 @@
 package com.centroi.alsuper.feature.landingpage.ui.landingpage
 
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import com.centroi.alsuper.core.data.LandingPageRepository
+import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageRepository
 import com.centroi.alsuper.feature.landingpage.ui.LandingPageUiState
 import com.centroi.alsuper.feature.landingpage.ui.LandingPageViewModel
 

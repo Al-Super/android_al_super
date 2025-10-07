@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import com.centroi.alsuper.core.data.DefaultLandingPageRepository
+import com.centroi.alsuper.core.data.repositories.landingPage.DefaultLandingPageRepository
 import com.centroi.alsuper.core.database.LandingPage
 import com.centroi.alsuper.core.database.LandingPageDao
 

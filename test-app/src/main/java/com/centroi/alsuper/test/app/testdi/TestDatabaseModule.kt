@@ -20,7 +20,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import com.centroi.alsuper.core.data.LandingPageRepository
+import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageRepository
 import com.centroi.alsuper.core.data.di.DataModule
 import com.centroi.alsuper.core.data.di.FakeLandingPageRepository
 

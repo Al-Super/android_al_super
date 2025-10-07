@@ -17,6 +17,7 @@ package com.centroi.alsuper.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -39,10 +40,18 @@ import com.centroi.alsuper.feature.profile.screens.ProfileScreen
 @Composable
 fun MainNavigation(
     navController: NavHostController,
-    loginCallback : (Boolean) -> Unit
+    loginCallback : (Boolean) -> Unit,
+    shouldShowLandingPage: Boolean,
+    onChangeAppTheme: MutableState<Boolean>
 ) {
-    NavHost(navController = navController, startDestination = Routes.StartingPointScreen.name) {
-        composable(Routes.MainScreen.name) { LandingPageScreen(modifier = Modifier.padding(16.dp)) }
+    val startDestination = getStartDestination(shouldShowLandingPage)
+    NavHost(navController = navController, startDestination = startDestination) {
+        composable(Routes.MainScreen.name) {
+            LandingPageScreen(
+                modifier = Modifier,
+                onChangeAppTheme = onChangeAppTheme
+            )
+        }
         composable(Routes.StartingPointScreen.name) {
             RequestLocationPermission() {}
             StartingPointScreen(navController = navController)
@@ -62,5 +71,13 @@ fun MainNavigation(
                 EditContactScreen(navController = navController, contactId = it)
             }
         }
+    }
+}
+
+private fun getStartDestination(shouldShowLandingPage: Boolean): String {
+    return if (shouldShowLandingPage) {
+        Routes.MainScreen.name
+    } else {
+        Routes.StartingPointScreen.name
     }
 }

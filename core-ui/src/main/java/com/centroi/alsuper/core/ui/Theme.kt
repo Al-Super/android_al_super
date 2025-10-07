@@ -60,6 +60,31 @@ private val FakeColorScheme = lightColorScheme(
     secondary = MainYellow,
     tertiary = YellowGray,
     background = YellowLight,
+    surface = YellowLight,
+    onSurface = Black,
+    surfaceVariant = White,
+    onSurfaceVariant = Black,
+    outline = PurpleGray,
+    surfaceTint = Orange
+
+    /* Other default colors to override
+    background = Color(0xFFFFFBFE),
+    surface = Color(0xFFFFFBFE),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color(0xFF1C1B1F),
+    onSurface = Color(0xFF1C1B1F),
+    */
+)
+
+private val OnboardingColorScheme = lightColorScheme(
+    primary = Black,
+    onPrimary = White,
+    secondary = MainYellow,
+    tertiary = YellowGray,
+    onTertiary = Black,
+    background = YellowStrong,
     surface = Yellow,
     onSurface = Black,
     surfaceVariant = White,
@@ -84,6 +109,7 @@ private val RealColorScheme = lightColorScheme(
     secondary = MainYellow,
     onSecondary = Black,
     tertiary = YellowLight,
+    onTertiary = MainYellow,
     background = YellowBrown,
     surface = Brown,
     onSurface = White,
@@ -107,6 +133,7 @@ private val RealColorScheme = lightColorScheme(
 fun AlSuperTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     isFakeApp: Boolean = true,
+    isOnboarding: Boolean = false,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
@@ -118,7 +145,8 @@ fun AlSuperTheme(
         }
         darkTheme -> DarkColorScheme
         else -> {
-            if (isFakeApp) FakeColorScheme else RealColorScheme
+
+            if (isOnboarding) OnboardingColorScheme else if (isFakeApp ) FakeColorScheme else  RealColorScheme
         }
     }
     val view = LocalView.current

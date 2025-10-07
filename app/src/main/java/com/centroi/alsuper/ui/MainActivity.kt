@@ -20,9 +20,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -39,30 +39,37 @@ import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.core.ui.components.navigation.bottomNavigation.AlSuperBottomNavigationBar
 import com.centroi.alsuper.core.ui.components.navigation.AlSuperTopNavigationBar
 import com.centroi.alsuper.core.worker.location.LocationWorkManager
+import com.centroi.alsuper.viewmodels.MainActivityViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    private val viewModel: MainActivityViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MainScreen()
+            MainScreen(
+                viewModel = viewModel
+            )
         }
     }
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    viewModel: MainActivityViewModel
+) {
     val navController = rememberNavController()
     val context = LocalContext.current
     val signedIn = remember { mutableStateOf(false) }
     val onFakeApp = remember { mutableStateOf(true) }
 
     AlSuperTheme(
-        isFakeApp = onFakeApp.value
+        isFakeApp = onFakeApp.value,
     ) {
         Scaffold(
             topBar = {
@@ -90,11 +97,12 @@ fun MainScreen() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
-                color = MaterialTheme.colorScheme.background
             ) {
                 MainNavigation(
                     navController = navController,
-                    loginCallback = { signedIn.value = it }
+                    loginCallback = { signedIn.value = it },
+                    shouldShowLandingPage = viewModel.shouldShowLandingPage(),
+                    onChangeAppTheme = onFakeApp
                 )
             }
             Log.d("MainScreen", "MainScreen: $innerPadding")

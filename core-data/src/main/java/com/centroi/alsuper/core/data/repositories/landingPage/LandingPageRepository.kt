@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-package com.centroi.alsuper.core.data
+package com.centroi.alsuper.core.data.repositories.landingPage
 
+import com.centroi.alsuper.core.data.models.LandingPageData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import com.centroi.alsuper.core.database.LandingPage
-import com.centroi.alsuper.core.database.LandingPageDao
+import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 interface LandingPageRepository {
-    val landingPages: Flow<List<String>>
+    val landingPages: Flow<List<LandingPageData>>
 
     suspend fun add(name: String)
 }
 
 class DefaultLandingPageRepository @Inject constructor(
-    private val landingPageDao: LandingPageDao
+    private val provider: LandingPageDataProviderInt,
 ) : LandingPageRepository {
 
-    override val landingPages: Flow<List<String>> =
-        landingPageDao.getLandingPages().map { items -> items.map { it.name } }
+    override val landingPages: Flow<List<LandingPageData>>
+        get() = flowOf(provider.getPages())
 
     override suspend fun add(name: String) {
-        landingPageDao.insertLandingPage(LandingPage(name = name))
+        return Unit
     }
 }

@@ -31,6 +31,12 @@ data class LandingPage(
     var uid: Int = 0
 }
 
+/**
+ * This class should be used if further database operations or backend integration is needed.
+ * The backend will provide  the data and then it will be stored in the local database and
+ * then provide it to the client.
+ * **/
+
 @Dao
 interface LandingPageDao {
     @Query("SELECT * FROM landingpage ORDER BY uid DESC LIMIT 10")
