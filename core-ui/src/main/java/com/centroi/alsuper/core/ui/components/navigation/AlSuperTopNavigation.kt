@@ -19,23 +19,27 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.centroi.alsuper.core.ui.R
+import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.core.ui.YellowBrown
 import com.centroi.alsuper.core.ui.components.button.TransparentWhiteButton
 
 @Composable
 fun AlSuperTopNavigationBar(
+    navController: NavController,
     onMainNavigation: (Boolean) -> Unit = {}
 ) {
     var isToggled by remember { mutableStateOf(true) }
 
     if(isToggled){
-        FakeAppTopBar() {
+        FakeAppTopBar(navController) {
             isToggled = it
             onMainNavigation(it)
         }
     } else {
-        RealAppTopBar() {
+        RealAppTopBar(navController) {
             isToggled = it
             onMainNavigation(it)
         }
@@ -45,6 +49,7 @@ fun AlSuperTopNavigationBar(
 
 @Composable
 fun RealAppTopBar(
+    navController: NavController,
     onMainNavigation: (Boolean) -> Unit
 ) {
     Row(
@@ -65,6 +70,7 @@ fun RealAppTopBar(
             icon = painterResource(id = R.drawable.ic_close),
             onClick = {
                 onMainNavigation(true)
+                navController.navigate(Routes.FakeHomeScreen.name)
             }
         )
     }
@@ -72,6 +78,7 @@ fun RealAppTopBar(
 
 @Composable
 private fun FakeAppTopBar(
+    navController: NavController,
     onMainNavigation: (Boolean) -> Unit
 ) {
     Row(
@@ -85,6 +92,7 @@ private fun FakeAppTopBar(
                     detectTapGestures(
                         onLongPress = {
                             onMainNavigation(false) // Send it via callback
+                            navController.navigate(Routes.InformationScreen.name)
                         }
                     )
                 },
@@ -97,5 +105,5 @@ private fun FakeAppTopBar(
 @Preview
 @Composable
 fun AlSuperTopNavigationBarPreview() {
-    AlSuperTopNavigationBar()
+    AlSuperTopNavigationBar(rememberNavController())
 }

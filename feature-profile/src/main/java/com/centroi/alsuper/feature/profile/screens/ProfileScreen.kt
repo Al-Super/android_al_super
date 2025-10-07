@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +25,7 @@ import com.centroi.alsuper.core.ui.Dimens
 import com.centroi.alsuper.core.ui.LocalFontWeight
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
+import com.centroi.alsuper.core.ui.YellowStrong
 import com.centroi.alsuper.core.ui.components.container.AlSuperCard
 import com.centroi.alsuper.core.ui.components.container.AlSuperCircularContainer
 
@@ -126,9 +128,11 @@ private fun ProfileDataContainer(
         modifier = Modifier
             .fillMaxWidth()
             .padding(spacing.space3x)
+
     ) {
         Column(
             modifier = Modifier
+                .background(YellowStrong)
                 .padding(spacing.space3x)
         ) {
             Row(

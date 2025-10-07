@@ -15,11 +15,9 @@
  */
 package com.centroi.alsuper.ui
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -65,6 +63,9 @@ fun MainNavigation(
         composable(Routes.ProfileScreen.name) { ProfileScreen() }
         composable(Routes.ContactsListScreen.name) { ContactsListScreen(navController = navController) }
         composable(Routes.AddContactScreen.name) { AddContactScreen(navController = navController) }
+        composable(Routes.InformationScreen.name) {  }
+        composable(Routes.SelfDiagnosisScreen.name) {  }
+        composable(Routes.ContactsListScreen.name) {  }
         composable("${Routes.EditContactScreen.name}/{$CONTACT_ID}",) { backStackEntry ->
             val contactId = backStackEntry.arguments?.getString(CONTACT_ID)?.toIntOrNull()
             contactId?.let {
