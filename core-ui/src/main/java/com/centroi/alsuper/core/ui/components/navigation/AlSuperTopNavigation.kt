@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
 import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.core.ui.YellowBrown
@@ -52,9 +54,11 @@ fun RealAppTopBar(
     navController: NavController,
     onMainNavigation: (Boolean) -> Unit
 ) {
+    val dimens = LocalSpacing.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(vertical = dimens.space4x)
             .windowInsetsPadding(WindowInsets.statusBars)
             .background(YellowBrown),
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -81,8 +85,10 @@ private fun FakeAppTopBar(
     navController: NavController,
     onMainNavigation: (Boolean) -> Unit
 ) {
+    val dimens = LocalSpacing.current
     Row(
         modifier = Modifier.fillMaxWidth()
+            .padding(vertical = dimens.space4x)
             .windowInsetsPadding(WindowInsets.statusBars),
         horizontalArrangement = Arrangement.Center
     ) {

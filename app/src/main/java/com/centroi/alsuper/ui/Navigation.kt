@@ -33,6 +33,7 @@ import com.centroi.alsuper.feature.contacts.screens.ContactsListScreen
 import com.centroi.alsuper.feature.contacts.screens.EditContactScreen
 import com.centroi.alsuper.feature.fakeapp.screens.CartScreen
 import com.centroi.alsuper.feature.fakeapp.screens.FakeHomeScreen
+import com.centroi.alsuper.feature.information.InformationScreen
 import com.centroi.alsuper.feature.profile.screens.ProfileScreen
 
 @Composable
@@ -63,7 +64,7 @@ fun MainNavigation(
         composable(Routes.ProfileScreen.name) { ProfileScreen() }
         composable(Routes.ContactsListScreen.name) { ContactsListScreen(navController = navController) }
         composable(Routes.AddContactScreen.name) { AddContactScreen(navController = navController) }
-        composable(Routes.InformationScreen.name) {  }
+        composable(Routes.InformationScreen.name) { InformationScreen() }
         composable(Routes.SelfDiagnosisScreen.name) {  }
         composable(Routes.ContactsListScreen.name) {  }
         composable("${Routes.EditContactScreen.name}/{$CONTACT_ID}",) { backStackEntry ->
