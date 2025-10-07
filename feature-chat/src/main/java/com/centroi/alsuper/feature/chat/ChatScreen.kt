@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import com.centroi.alsuper.core.ui.Dimens
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,6 +63,7 @@ fun ChatScreen() {
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(messageList.size) {
         if (messageList.isNotEmpty() && messageList.last().transmitter == TransmitterMessage.USER) {
+            delay(750)
             messageList.add(
                 ChatBotMessage(
                     transmitter = TransmitterMessage.BOT,
@@ -80,21 +82,25 @@ fun ChatScreen() {
         Text(
             text = "Chatea",
             fontSize = 36.sp,
-            fontWeight = FontWeight.W400
+            fontWeight = FontWeight.W400,
+            color = MaterialTheme.colorScheme.onPrimary
         )
         Text(
             text = "con nosotros",
             fontSize = 36.sp,
-            fontWeight = FontWeight.W400
+            fontWeight = FontWeight.W400,
+            color = MaterialTheme.colorScheme.onPrimary
         )
         Text(
             modifier = Modifier.padding(bottom = dimens.space3x),
             text = "Rápido, simple y confidencial",
             fontSize = 24.sp,
-            fontWeight = FontWeight.W400
+            fontWeight = FontWeight.W400,
+            color = MaterialTheme.colorScheme.onPrimary
         )
         Text(
             text = "Nuestro chat te ayudará con consejos en situaciones difíciles. Puedes compartir qué está sucediendo, preguntar cualquier cosa y aprender acerca de recursos disponibles. Todo es completamente anónimo y solo para ti.",
+            color = MaterialTheme.colorScheme.onPrimary
         )
         Button(
             modifier = Modifier
@@ -226,14 +232,14 @@ private fun MessageBubble(chatMessage: ChatBotMessage) {
     ) {
         // Determine colors and shape based on the transmitter
         val bubbleColor = if (isUserMessage) {
-            MaterialTheme.colorScheme.primary
+            MaterialTheme.colorScheme.onSurfaceVariant
         } else {
-            MaterialTheme.colorScheme.surfaceVariant
+            MaterialTheme.colorScheme.surface
         }
         val textColor = if (isUserMessage) {
             MaterialTheme.colorScheme.onPrimary
         } else {
-            MaterialTheme.colorScheme.onSurfaceVariant
+            MaterialTheme.colorScheme.onPrimary
         }
         val bubbleShape = if (isUserMessage) {
             RoundedCornerShape(topStart = 16.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp)

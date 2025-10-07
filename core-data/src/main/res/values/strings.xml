@@ -4,24 +4,25 @@
     <string name="LANDING_PAGE_BUTTON">Siguiente</string>
     <string name="LANDING_PAGE_CLOSE_BUTTON">Cerrar modo</string>
     <!-- LANDING PAGE ONE -->
-    <string name="LANDING_PAGE_ONE_TITLE">Sign in</string>
-    <string name="LANDING_PAGE_ONE_DESCRIPTION">Sign in</string>
+    <string name="LANDING_PAGE_ONE_TITLE">Entra en un espacio seguro con la app Centro-l</string>
+    <string name="LANDING_PAGE_ONE_DESCRIPTION">Centro-i es un salvavidas diseñado para empoderarte y protegerte a ti y a tus seres queridos en situaciones de violencia doméstica.</string>
     <!-- LANDING PAGE TWO -->
-    <string name="LANDING_PAGE_TWO_TITLE">Sign in</string>
-    <string name="LANDING_PAGE_TWO_DESCRIPTION">Sign in</string>
-    <string name="LANDING_PAGE_TWO_TEXT">Sign in</string>
+    <string name="LANDING_PAGE_TWO_TITLE">Información importante</string>
+    <string name="LANDING_PAGE_TWO_DESCRIPTION">Revisa cuidadosamente el texto en las próximas dos pantallas. Solo tendrás una oportunidad para leerlo, ya que no volverá a aparecer.</string>
+    <string name="LANDING_PAGE_TWO_TEXT">Te tomará menos de dos minutos.</string>
     <!-- LANDING PAGE THREE -->
-    <string name="LANDING_PAGE_THREE_TITLE">Sign in</string>
-    <string name="LANDING_PAGE_THREE_DESCRIPTION">Sign in</string>
+    <string name="LANDING_PAGE_THREE_TITLE">Modo confidencial</string>
+    <string name="LANDING_PAGE_THREE_DESCRIPTION">Para acceder a la sección oculta de la app, mantén presionado el logo durante 2 segundos.</string>
     <!-- LANDING PAGE FOUR -->
-    <string name="LANDING_PAGE_FOUR_TITLE">Sign in</string>
-    <string name="LANDING_PAGE_FOUR_DESCRIPTION">Sign in</string>
+    <string name="LANDING_PAGE_FOUR_TITLE">Modo confidencial</string>
+    <string name="LANDING_PAGE_FOUR_DESCRIPTION">Para acceder a la sección oculta de la app, mantén presionado el logo durante 2 segundos.</string>
     <!-- LANDING PAGE FIFTH -->
-    <string name="LANDING_PAGE_FIVE_TITLE">Sign in</string>
-    <string name="LANDING_PAGE_FIVE_DESCRIPTION">Sign in</string>
+    <string name="LANDING_PAGE_FIVE_TITLE">Salida rápida</string>
+    <string name="LANDING_PAGE_FIVE_DESCRIPTION">Para cerrar rápidamente la sección oculta, simplemente toca el botón en la parte superior de la pantalla.</string>
     <!-- LANDING PAGE SIXTH -->
-    <string name="LANDING_PAGE_SIX_TITLE">Sign in</string>
-    <string name="LANDING_PAGE_SIX_DESCRIPTION">Sign in</string>
-    <string name="LANDING_PAGE_SIX_TERMS_AND_CONDITIONS">Sign in</string>
-    <string name="LANDING_PAGE_SIX_DATA_CONSENT">Sign in</string>
+    <string name="LANDING_PAGE_SIX_TITLE">Seguridad de datos</string>
+    <string name="LANDING_PAGE_SIX_DESCRIPTION">Valoramos tu privacidad.</string>
+    <string name="LANDING_PAGE_SIX_TEXT">Antes de continuar, por favor revisa el Aviso de Privacidad y el Acuerdo de Usuario.</string>
+    <string name="LANDING_PAGE_SIX_TERMS_AND_CONDITIONS">Acepto el Aviso de Privacidad y el Acuerdo de Usuario</string>
+    <string name="LANDING_PAGE_SIX_DATA_CONSENT">Doy mi consentimiento para el tratamiento de mis datos personales con el fin de habilitar las funciones de esta aplicación</string>
 </resources>

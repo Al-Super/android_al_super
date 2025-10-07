@@ -21,24 +21,47 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import com.centroi.alsuper.core.ui.AlSuperTheme
+import com.centroi.alsuper.core.ui.FontWeight
+import com.centroi.alsuper.core.ui.R
 import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.core.ui.components.navigation.bottomNavigation.AlSuperBottomNavigationBar
 import com.centroi.alsuper.core.ui.components.navigation.AlSuperTopNavigationBar
 import com.centroi.alsuper.core.worker.location.LocationWorkManager
+import com.centroi.alsuper.feature.landingpage.ui.LandingPageScreen
 import com.centroi.alsuper.viewmodels.MainActivityViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -59,6 +82,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     viewModel: MainActivityViewModel
@@ -67,6 +91,10 @@ fun MainScreen(
     val context = LocalContext.current
     val signedIn = remember { mutableStateOf(false) }
     val onFakeApp = remember { mutableStateOf(true) }
+    val onShowSoS = remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
 
     AlSuperTheme(
         isFakeApp = onFakeApp.value,
@@ -94,7 +122,7 @@ fun MainScreen(
             }
         ) { innerPadding ->
 
-            Surface(
+            Box (
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
@@ -105,6 +133,51 @@ fun MainScreen(
                     shouldShowLandingPage = viewModel.shouldShowLandingPage(),
                     onChangeAppTheme = onFakeApp
                 )
+                when {
+                    navController.currentDestination?.route == Routes.InformationScreen.name ||
+                    navController.currentDestination?.route == Routes.SelfDiagnosisScreen .name ||
+                    navController.currentDestination?.route == Routes.ContactsListScreen.name ||
+                    (navController.currentDestination?.route == Routes.ProfileScreen.name && !onFakeApp.value)-> {
+                        Box(
+                            modifier = Modifier
+                                .padding(32.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.secondary)
+                                .align(Alignment.BottomCenter)
+                                .padding(20.dp)
+                                .clickable(onClick = { onShowSoS.value = true})
+
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.ic_sos),
+                                    contentDescription = "Panic Button",
+                                    colorFilter = ColorFilter.tint(color = Color.DarkGray)
+                                )
+                                Text(
+                                    modifier = Modifier.padding(start = 8.dp),
+                                    text = "Panic button",
+                                    fontWeight = androidx.compose.ui.text.font.FontWeight.W500
+                                )
+                            }
+                        }
+                    }
+                }
+                if(onShowSoS.value){
+                    ModalBottomSheet(
+                        sheetState = sheetState,
+                        onDismissRequest = {
+                            onShowSoS.value = false
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                        containerColor = MaterialTheme.colorScheme.background,
+                    ) {
+                        PanicScreen(onShowSoS)
+                    }
+                }
+
             }
             Log.d("MainScreen", "MainScreen: $innerPadding")
         }

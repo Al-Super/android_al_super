@@ -54,7 +54,8 @@ fun LandingPageTemplate(
                     text = it,
                     icon = painterResource(id = R.drawable.ic_close),
                     onClick = {
-                        onChangeAppTheme.value = false
+                        onChangeAppTheme.value = !onChangeAppTheme.value
+                        goToNextPage.value = true
                     }
                 )
             }

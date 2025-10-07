@@ -2,8 +2,8 @@ package com.centroi.alsuper.core.ui.components.carousel
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,12 +24,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
+import com.centroi.alsuper.core.ui.Routes
 
 @Composable
 fun SectionArticlesCarousel(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    title: String,
+    navController: NavController,
 ) {
     val dimens = LocalSpacing.current
     Column (
@@ -40,7 +44,7 @@ fun SectionArticlesCarousel(
                 start = dimens.space4x,
                 bottom = dimens.space2x
             ),
-            text = "Best Sellers",
+            text = title,
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold
         )
@@ -60,6 +64,7 @@ fun SectionArticlesCarousel(
                         .clip(RoundedCornerShape(26.dp))
                         .background(Color.White)
                         .padding(dimens.space2x)
+                        .clickable(onClick = {navController.navigate(Routes.FakeArticleScreen.name)})
                 ) {
                     Image(
                         modifier = Modifier

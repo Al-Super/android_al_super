@@ -20,19 +20,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
+import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.core.ui.White
 import com.centroi.alsuper.core.ui.components.carousel.SectionArticlesCarousel
 
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
-    device = PIXEL_7_PRO
-)
 @Composable
-fun CartScreen() {
+fun CartScreen(
+    navController: NavController
+) {
     val dimens = LocalSpacing.current
     Column(
         modifier = Modifier.fillMaxSize()
@@ -57,7 +56,9 @@ fun CartScreen() {
             Text("Oops, tu carrito esta vacio")
             Button(
                 modifier = Modifier.padding(top = dimens.space2x),
-                onClick = {}
+                onClick = {
+                    navController.navigate(Routes.FakeHomeScreen.name)
+                }
             ) {
                 Text("Seguir comprando")
             }
@@ -69,7 +70,9 @@ fun CartScreen() {
                 modifier = Modifier
                     .background(White)
                     .padding(top = dimens.space3x)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                title = "Vistos recientemente",
+                navController = navController
             )
         }
     }

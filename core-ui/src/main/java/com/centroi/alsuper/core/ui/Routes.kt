@@ -15,7 +15,9 @@ enum class Routes {
     SelfDiagnosisScreen,
     ContactsListScreen,
     AddContactScreen,
-    EditContactScreen
+    EditContactScreen,
+    SplashScreen,
+    FakeArticleScreen
 }
 
 @Suppress("MaxLineLength")
