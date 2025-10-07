@@ -31,18 +31,11 @@ import com.centroi.alsuper.core.ui.components.editText.PasswordTextField
 fun LoginScreen(
     navController: NavController,
     loginCallback: (Boolean) -> Unit,
-    comesFromEditProfile: Boolean,
 ) {
     LoginScreen(
         navigateToRegister = { navController.navigate(Routes.RegistrationScreen.name) { launchSingleTop = true} },
         loginCallback = {
             loginCallback(it)
-            navController.navigate(Routes.FakeHomeScreen.name) {
-                popUpTo(navController.graph.startDestinationId) {
-                    inclusive = true
-                }
-                launchSingleTop = true
-            }
         }
     )
 }
@@ -90,7 +83,9 @@ internal fun LoginScreen(
 
             )
             Button(
-                onClick = { loginCallback(true) },
+                onClick = {
+                    loginCallback(true)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = spacing.space6x),
