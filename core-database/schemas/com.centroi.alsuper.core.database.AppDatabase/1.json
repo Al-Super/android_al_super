@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f8fe5a71a7a717d7ebaf8f2d5e349f0a",
+    "identityHash": "14227097bb2bd3480c5ac038b02bd8c1",
     "entities": [
       {
         "tableName": "LandingPage",
@@ -117,12 +117,44 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "UserSession",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `encryptedToken` TEXT NOT NULL, `encryptedRefreshToken` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "encryptedToken",
+            "columnName": "encryptedToken",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "encryptedRefreshToken",
+            "columnName": "encryptedRefreshToken",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f8fe5a71a7a717d7ebaf8f2d5e349f0a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '14227097bb2bd3480c5ac038b02bd8c1')"
     ]
   }
 }

@@ -15,6 +15,11 @@
     <string name="login_sign_in">Sign in</string>
     <string name="login_forgot_password">Forgot Password?</string>
     <string name="login_new_user">New User? Create Account</string>
+    <!-- CONFIRMATION SCREEN -->
+    <string name="confirmation_screen_title">Verification code</string>
+    <string name="confirmation_screen_description">Please write the code we sent you via SMS</string>
+    <string name="confirmation_screen_confirmation">Confirm</string>
+    <string name="confirmation_screen_retry">Did not get it?, send it again</string>
     <!--REGISTRATION-->
     <string name="registration_first_name">First name</string>
     <string name="registration_first_name_placeholder">Enter your first name</string>

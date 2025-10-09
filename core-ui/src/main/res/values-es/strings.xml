@@ -15,6 +15,12 @@
     <string name="login_sign_in">Iniciar sesión</string>
     <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
     <string name="login_new_user">¿Nueva usuaria? Crear cuenta</string>
+    <!-- CONFIRMATION SCREEN -->
+    <string name="confirmation_screen_title">Código de verificación</string>
+    <string name="confirmation_screen_description">Porfavor introduce el codigo que te enviamos vía SMS</string>
+    <string name="confirmation_screen_confirmation">Confirmar</string>
+    <string name="confirmation_screen_retry">No lo recibiste?, enviar de nuevo</string>
+
     <!--REGISTRATION-->
     <string name="registration_first_name">Nombre</string>
     <string name="registration_first_name_placeholder">Ingresa tu nombre</string>

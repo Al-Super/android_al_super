@@ -75,7 +75,10 @@ fun RealAppTopBar(
             icon = painterResource(id = R.drawable.ic_close),
             onClick = {
                 onMainNavigation(true)
-                navController.navigate(Routes.FakeHomeScreen.name)
+                navController.navigate(Routes.FakeHomeScreen.name) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
             }
         )
     }
@@ -99,8 +102,10 @@ private fun FakeAppTopBar(
                     detectTapGestures(
                         onLongPress = {
                             onMainNavigation(false) // Send it via callback
-                            navController.navigate(Routes.InformationScreen.name)
-                        }
+                            navController.navigate(Routes.InformationScreen.name) {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }                        }
                     )
                 },
             painter = painterResource(id = R.drawable.ic_light_logo),

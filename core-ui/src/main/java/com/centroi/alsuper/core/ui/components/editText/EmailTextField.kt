@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,15 +19,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.centroi.alsuper.core.ui.R
 
 @Composable
-fun EmailTextField() {
-    var email by remember { mutableStateOf("") }
+fun EmailTextField(
+    email: MutableState<String>
+) {
     var isError by remember { mutableStateOf(false) }
 
     Column {
         OutlinedTextField(
-            value = email,
+            value = email.value,
             onValueChange = {
-                email = it
+                email.value = it
                 isError = !isValidEmail(it) // Simple email validation
             },
             label = { Text(stringResource(R.string.login_email)) },
@@ -55,5 +57,5 @@ fun isValidEmail(email: String): Boolean {
 @Preview(showBackground = true)
 @Composable
 fun PreviewEmailTextField() {
-    EmailTextField()
+    EmailTextField(remember { mutableStateOf("") })
 }

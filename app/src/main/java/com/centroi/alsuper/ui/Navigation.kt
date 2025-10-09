@@ -18,17 +18,15 @@ package com.centroi.alsuper.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.centroi.alsuper.CONTACT_ID
-import com.centroi.alsuper.RequestLocationPermission
 import com.centroi.alsuper.core.ui.Routes
+import com.centroi.alsuper.feature.auth.screens.ConfirmationScreen
 import com.centroi.alsuper.feature.auth.screens.LoginScreen
 import com.centroi.alsuper.feature.auth.screens.RegistrationScreen
 import com.centroi.alsuper.feature.landingpage.ui.LandingPageScreen
-import com.centroi.alsuper.feature.auth.screens.StartingPointScreen
 import com.centroi.alsuper.feature.chat.ChatScreen
 import com.centroi.alsuper.feature.contacts.screens.AddContactScreen
 import com.centroi.alsuper.feature.contacts.screens.ContactsListScreen
@@ -41,7 +39,7 @@ import com.centroi.alsuper.feature.profile.screens.ProfileScreen
 @Composable
 fun MainNavigation(
     navController: NavHostController,
-    loginCallback : (Boolean) -> Unit,
+    loginCallback : MutableState<Boolean>,
     shouldShowLandingPage: Boolean,
     onChangeAppTheme: MutableState<Boolean>
 ) {
@@ -61,7 +59,7 @@ fun MainNavigation(
         composable(Routes.LoginScreen.name) {
             LoginScreen(navController = navController, loginCallback = loginCallback)
         }
-        composable(Routes.RegistrationScreen.name) { RegistrationScreen(navController = navController) }
+        composable(Routes.RegistrationScreen.name) { RegistrationScreen() }
         composable(Routes.FakeHomeScreen.name) { FakeHomeScreen(navController) }
         composable(Routes.CartScreen.name) { CartScreen(navController) }
         composable(Routes.ProfileScreen.name) { ProfileScreen() }
@@ -70,6 +68,7 @@ fun MainNavigation(
         composable(Routes.InformationScreen.name) { InformationScreen() }
         composable(Routes.SelfDiagnosisScreen.name) { ChatScreen() }
         composable(Routes.FakeArticleScreen.name) {  }
+        composable(Routes.ConfirmationScreen.name) { ConfirmationScreen(loginCallback)}
         composable("${Routes.EditContactScreen.name}/{$CONTACT_ID}") { backStackEntry ->
             val contactId = backStackEntry.arguments?.getString(CONTACT_ID)?.toIntOrNull()
             contactId?.let {

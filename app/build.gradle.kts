@@ -97,7 +97,7 @@ android {
 
 dependencies {
     implementation(project(":core-ui"))
-    implementation(project(":core-worker"))
+    implementation(project(":core-common"))
     implementation(project(":feature-landingpage"))
     implementation(project(":feature-auth"))
     implementation(project(":feature-fakeapp"))

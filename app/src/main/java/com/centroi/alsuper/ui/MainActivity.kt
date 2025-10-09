@@ -25,17 +25,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -50,24 +47,26 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import com.centroi.alsuper.core.ui.AlSuperTheme
-import com.centroi.alsuper.core.ui.FontWeight
 import com.centroi.alsuper.core.ui.R
 import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.core.ui.components.navigation.bottomNavigation.AlSuperBottomNavigationBar
 import com.centroi.alsuper.core.ui.components.navigation.AlSuperTopNavigationBar
-import com.centroi.alsuper.core.worker.location.LocationWorkManager
-import com.centroi.alsuper.feature.landingpage.ui.LandingPageScreen
+import com.centroi.alsuper.core.common.location.LocationWorkManager
+import com.centroi.alsuper.core.ui.components.navcontroller.NavControllerManager
 import com.centroi.alsuper.viewmodels.MainActivityViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var navControllerManager: NavControllerManager
 
     private val viewModel: MainActivityViewModel by viewModels()
 
@@ -76,7 +75,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MainScreen(
-                viewModel = viewModel
+                viewModel = viewModel,
+                navControllerManager = navControllerManager
             )
         }
     }
@@ -85,7 +85,8 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    viewModel: MainActivityViewModel
+    viewModel: MainActivityViewModel,
+    navControllerManager: NavControllerManager
 ) {
     val navController = rememberNavController()
     val context = LocalContext.current
@@ -95,7 +96,7 @@ fun MainScreen(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
-
+    navControllerManager.initializeNavController(navController)
     AlSuperTheme(
         isFakeApp = onFakeApp.value,
     ) {
@@ -129,7 +130,7 @@ fun MainScreen(
             ) {
                 MainNavigation(
                     navController = navController,
-                    loginCallback = { signedIn.value = it },
+                    loginCallback = signedIn,
                     shouldShowLandingPage = viewModel.shouldShowLandingPage(),
                     onChangeAppTheme = onFakeApp
                 )
