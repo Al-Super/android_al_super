@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,10 +31,12 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,33 +48,72 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.centroi.alsuper.core.data.models.chat.ChatQuestionResponse
 import com.centroi.alsuper.core.ui.Dimens
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
+import com.centroi.alsuper.core.ui.components.UiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen() {
+fun ChatScreen(
+    viewModel: ChatScreenViewModelAbstract = hiltViewModel<ChatScreenViewModel>()
+) {
     val dimens = LocalSpacing.current
     val onShowChat = remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val messageList = remember { mutableStateListOf<ChatBotMessage>() }
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(messageList.size) {
-        if (messageList.isNotEmpty() && messageList.last().transmitter == TransmitterMessage.USER) {
-            delay(750)
-            messageList.add(
-                ChatBotMessage(
-                    transmitter = TransmitterMessage.BOT,
-                    message = "Respuesta automatica del bot..."
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Handle UI state changes and message list updates
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is UiState.Loading -> {
+                if (messageList.isNotEmpty() && messageList.last().transmitter == TransmitterMessage.USER) {
+                    messageList.add(
+                        ChatBotMessage(
+                            transmitter = TransmitterMessage.LOADING,
+                            message = TransmitterMessage.LOADING.name,
+                            isLoading = true
+                        )
+                    )
+                }
+            }
+            is UiState.Success -> {
+                if (messageList.isNotEmpty() && messageList.last().transmitter == TransmitterMessage.LOADING) {
+                    messageList.removeAt(messageList.lastIndex)
+                }
+                val response = (uiState as UiState.Success<ChatQuestionResponse>).data
+                messageList.add(
+                    ChatBotMessage(
+                        transmitter = TransmitterMessage.BOT,
+                        message = response?.payload?.response?.message.orEmpty()
+                    )
                 )
-            )
+                viewModel.resetState()
+            }
+            is UiState.Error -> {
+                if (messageList.isNotEmpty() && messageList.last().transmitter == TransmitterMessage.LOADING) {
+                    messageList.removeAt(messageList.lastIndex)
+                }
+                messageList.add(
+                    ChatBotMessage(
+                        transmitter = TransmitterMessage.BOT,
+                        message = "Ocurrió un error. Intenta de nuevo."
+                    )
+                )
+                viewModel.resetState()
+            }
+            else -> {}
         }
     }
+
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
@@ -79,29 +121,7 @@ fun ChatScreen() {
             .padding(dimens.space4x),
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "Chatea",
-            fontSize = 36.sp,
-            fontWeight = FontWeight.W400,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-        Text(
-            text = "con nosotros",
-            fontSize = 36.sp,
-            fontWeight = FontWeight.W400,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-        Text(
-            modifier = Modifier.padding(bottom = dimens.space3x),
-            text = "Rápido, simple y confidencial",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.W400,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-        Text(
-            text = "Nuestro chat te ayudará con consejos en situaciones difíciles. Puedes compartir qué está sucediendo, preguntar cualquier cosa y aprender acerca de recursos disponibles. Todo es completamente anónimo y solo para ti.",
-            color = MaterialTheme.colorScheme.onPrimary
-        )
+        ChatHeader(dimens)
         Button(
             modifier = Modifier
                 .padding(top = dimens.space4x)
@@ -113,22 +133,50 @@ fun ChatScreen() {
         ) {
             Text("Comenzar chat")
         }
-    }
-    if (onShowChat.value) {
-        FullSheetChat(
-            sheetState,
-            onShowChat,
-            messageList,
-            onSend = { message ->
-                messageList.add(
-                    ChatBotMessage(
-                        transmitter = TransmitterMessage.USER,
-                        message = message
+        if (onShowChat.value) {
+            FullSheetChat(
+                sheetState = sheetState,
+                onShowChat = onShowChat,
+                messageList = messageList,
+                onSend = { message ->
+                    messageList.add(
+                        ChatBotMessage(
+                            transmitter = TransmitterMessage.USER,
+                            message = message
+                        )
                     )
-                )
-            }
-        )
+                    viewModel.tryQuestion(message)
+                }
+            )
+        }
     }
+}
+
+@Composable
+private fun ChatHeader(dimens: Dimens) {
+    Text(
+        text = "Chatea",
+        fontSize = 36.sp,
+        fontWeight = FontWeight.W400,
+        color = MaterialTheme.colorScheme.onPrimary
+    )
+    Text(
+        text = "con nosotros",
+        fontSize = 36.sp,
+        fontWeight = FontWeight.W400,
+        color = MaterialTheme.colorScheme.onPrimary
+    )
+    Text(
+        modifier = Modifier.padding(bottom = dimens.space3x),
+        text = "Rápido, simple y confidencial",
+        fontSize = 24.sp,
+        fontWeight = FontWeight.W400,
+        color = MaterialTheme.colorScheme.onPrimary
+    )
+    Text(
+        text = "Nuestro chat te ayudará con consejos en situaciones difíciles. Puedes compartir qué está sucediendo, preguntar cualquier cosa y aprender acerca de recursos disponibles. Todo es completamente anónimo y solo para ti.",
+        color = MaterialTheme.colorScheme.onPrimary
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -143,9 +191,7 @@ private fun FullSheetChat(
     val isTextFieldFocused = remember { mutableStateOf(false) }
     ModalBottomSheet(
         sheetState = sheetState,
-        onDismissRequest = {
-            onShowChat.value = false
-        },
+        onDismissRequest = { onShowChat.value = false },
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
     ) {
@@ -153,29 +199,9 @@ private fun FullSheetChat(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(dimens.space4x),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Image(
-                    painter = painterResource(com.centroi.alsuper.core.ui.R.drawable.ic_dark_logo),
-                    contentDescription = ""
-                )
-                Image(
-                    modifier = Modifier
-                        .size(dimens.space6x)
-                        .clickable(
-                            onClick = { onShowChat.value = false }
-                        ),
-                    painter = painterResource(com.centroi.alsuper.core.ui.R.drawable.ic_close),
-                    contentDescription = ""
-                )
-            }
+            ChatSheetHeader(onShowChat, dimens)
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.Center,
@@ -188,8 +214,30 @@ private fun FullSheetChat(
                 }
             }
             ChatTextField(dimens, isTextFieldFocused, onSend)
-
         }
+    }
+}
+
+@Composable
+private fun ChatSheetHeader(onShowChat: MutableState<Boolean>, dimens: Dimens) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_dark_logo),
+            contentDescription = ""
+        )
+        Image(
+            modifier = Modifier
+                .size(dimens.space6x)
+                .clickable { onShowChat.value = false },
+            painter = painterResource(R.drawable.ic_close),
+            contentDescription = ""
+        )
     }
 }
 
@@ -199,14 +247,11 @@ private fun MessageChatContainer(
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
-
-    // Animate scroll to the bottom when a new message is added
     LaunchedEffect(messageList.size) {
         if (messageList.isNotEmpty()) {
             listState.animateScrollToItem(messageList.size - 1)
         }
     }
-
     LazyColumn(
         state = listState,
         modifier = modifier.fillMaxSize(),
@@ -220,9 +265,15 @@ private fun MessageChatContainer(
 
 @Composable
 private fun MessageBubble(chatMessage: ChatBotMessage) {
-    // Determine alignment based on the transmitter
     val isUserMessage = chatMessage.transmitter == TransmitterMessage.USER
     val horizontalArrangement = if (isUserMessage) Arrangement.End else Arrangement.Start
+    val bubbleColor = if (isUserMessage) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.surface
+    val textColor = MaterialTheme.colorScheme.onPrimary
+    val bubbleShape = if (isUserMessage) {
+        RoundedCornerShape(topStart = 16.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
+    } else {
+        RoundedCornerShape(topStart = 4.dp, topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
+    }
 
     Row(
         modifier = Modifier
@@ -230,36 +281,47 @@ private fun MessageBubble(chatMessage: ChatBotMessage) {
             .padding(horizontal = 8.dp, vertical = 4.dp),
         horizontalArrangement = horizontalArrangement
     ) {
-        // Determine colors and shape based on the transmitter
-        val bubbleColor = if (isUserMessage) {
-            MaterialTheme.colorScheme.onSurfaceVariant
-        } else {
-            MaterialTheme.colorScheme.surface
-        }
-        val textColor = if (isUserMessage) {
-            MaterialTheme.colorScheme.onPrimary
-        } else {
-            MaterialTheme.colorScheme.onPrimary
-        }
-        val bubbleShape = if (isUserMessage) {
-            RoundedCornerShape(topStart = 16.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-        } else {
-            RoundedCornerShape(topStart = 4.dp, topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-        }
-
-        Surface(
-            color = bubbleColor,
-            shape = bubbleShape
-        ) {
-            Text(
-                text = chatMessage.message,
-                color = textColor,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
-            )
+        Surface(color = bubbleColor, shape = bubbleShape) {
+            if (chatMessage.isLoading) {
+                Row(
+                    modifier = Modifier
+                        .width(62.dp)
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    DotLoadingAnimation(color = textColor, modifier = Modifier.padding(start = 2.dp))
+                }
+            } else {
+                Text(
+                    text = chatMessage.message,
+                    color = textColor,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                )
+            }
         }
     }
 }
 
+@Composable
+private fun DotLoadingAnimation(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onPrimary
+) {
+    var dotCount by remember { mutableStateOf(1) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(300)
+            dotCount = (dotCount % 3) + 1
+        }
+    }
+    Text(
+        text = ".".repeat(dotCount),
+        color = color,
+        modifier = modifier,
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold
+    )
+}
 
 @Composable
 private fun ChatTextField(
@@ -274,16 +336,11 @@ private fun ChatTextField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = dimens.space2x)
-            .onFocusChanged { focusState ->
-                isTextFieldFocused.value = focusState.isFocused
-            },
+            .onFocusChanged { focusState -> isTextFieldFocused.value = focusState.isFocused },
         placeholder = {
             Text(
                 text = "Escribe un mensaje...",
-                style = TextStyle(
-                    color = Color.LightGray,
-                    fontSize = 16.sp
-                )
+                style = TextStyle(color = Color.LightGray, fontSize = 16.sp)
             )
         },
         colors = TextFieldDefaults.colors(

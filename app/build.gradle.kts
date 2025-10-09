@@ -41,6 +41,8 @@ android {
             useSupportLibrary = true
         }
 
+        multiDexEnabled = true
+
         // Enable room auto-migrations
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
@@ -106,6 +108,7 @@ dependencies {
     implementation(project(":feature-information"))
     implementation(project(":feature-chat"))
 
+    implementation(libs.androidx.multidex)
     // Core Android dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

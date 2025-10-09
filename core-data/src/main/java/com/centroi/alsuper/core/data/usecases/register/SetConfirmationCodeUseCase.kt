@@ -1,4 +1,4 @@
-package com.centroi.alsuper.core.data.usecases.login
+package com.centroi.alsuper.core.data.usecases.register
 
 import com.centroi.alsuper.core.data.repositories.login.LoginRepositoryInt
 import javax.inject.Inject

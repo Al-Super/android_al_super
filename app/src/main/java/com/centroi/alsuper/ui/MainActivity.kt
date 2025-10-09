@@ -50,12 +50,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import com.centroi.alsuper.core.ui.AlSuperTheme
 import com.centroi.alsuper.core.ui.R
 import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.core.ui.components.navigation.bottomNavigation.AlSuperBottomNavigationBar
 import com.centroi.alsuper.core.ui.components.navigation.AlSuperTopNavigationBar
 import com.centroi.alsuper.core.common.location.LocationWorkManager
+import com.centroi.alsuper.core.ui.AlSuperTheme
 import com.centroi.alsuper.core.ui.components.navcontroller.NavControllerManager
 import com.centroi.alsuper.viewmodels.MainActivityViewModel
 import kotlinx.coroutines.Dispatchers
@@ -89,6 +89,7 @@ fun MainScreen(
     navControllerManager: NavControllerManager
 ) {
     val navController = rememberNavController()
+    navControllerManager.initializeNavController(navController)
     val context = LocalContext.current
     val signedIn = remember { mutableStateOf(false) }
     val onFakeApp = remember { mutableStateOf(true) }
@@ -96,7 +97,6 @@ fun MainScreen(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
-    navControllerManager.initializeNavController(navController)
     AlSuperTheme(
         isFakeApp = onFakeApp.value,
     ) {

@@ -47,6 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
+import com.centroi.alsuper.core.ui.components.UiState
 
 
 @Composable
@@ -60,12 +61,12 @@ fun ConfirmationScreen(
 
     LaunchedEffect(uiState) {
         when (val state = uiState) {
-            is LoginUiState.Success -> {
+            is UiState.Success -> {
                 loginCallback.value = true
                 viewModel.navigateToFakeArticlesScreen()
             }
 
-            is LoginUiState.Error -> {
+            is UiState.Error -> {
                 snackbarHostState.showSnackbar(message = state.message.orEmpty())
                 viewModel.resetState()
             }

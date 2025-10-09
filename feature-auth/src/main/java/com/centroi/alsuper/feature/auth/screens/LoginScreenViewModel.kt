@@ -6,6 +6,7 @@ import com.centroi.alsuper.core.data.ResultState
 import com.centroi.alsuper.core.data.models.login.LoginResponse
 import com.centroi.alsuper.core.data.usecases.login.GetLoginAuthUseCase
 import com.centroi.alsuper.core.data.userstate.UserSessionHelper
+import com.centroi.alsuper.core.ui.components.UiState
 import com.centroi.alsuper.core.ui.components.navcontroller.NavControllerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +21,9 @@ abstract class LoginScreenViewModelAbstract() : ViewModel() {
     abstract fun goToFakeCartScreen()
 
     abstract fun resetState()
+    abstract fun shouldGoToFakeCartScreen(callback: (Boolean) -> Unit)
 
-    abstract val uiState: StateFlow<LoginUiState<LoginResponse>>
+    abstract val uiState: StateFlow<UiState<LoginResponse>>
 }
 
 @HiltViewModel
@@ -31,8 +33,8 @@ class LoginScreenViewModel @Inject constructor(
     private val userSessionHelper: UserSessionHelper
 ) : LoginScreenViewModelAbstract() {
 
-    private val _uiState = MutableStateFlow<LoginUiState<LoginResponse>>(LoginUiState.Idle())
-    override val uiState: StateFlow<LoginUiState<LoginResponse>> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<UiState<LoginResponse>>(UiState.Idle())
+    override val uiState: StateFlow<UiState<LoginResponse>> = _uiState.asStateFlow()
 
     override fun goToFakeCartScreen() {
         navControllerManager.goToFakeCartScreen()
@@ -46,19 +48,25 @@ class LoginScreenViewModel @Inject constructor(
             getLoginUseCase.invoke(email, password).collect { resultState ->
                 when (resultState) {
                     is ResultState.Error -> {
-                        _uiState.value = LoginUiState.Error(resultState.message.orEmpty())
+                        _uiState.value = UiState.Error(resultState.message.orEmpty())
                     }
                     is ResultState.Loading -> {
-                        _uiState.value = LoginUiState.Loading()
+                        _uiState.value = UiState.Loading()
                     }
                     is ResultState.Success -> {
                         resultState.data?.let {
-                            _uiState.value = LoginUiState.Success(it)
+                            _uiState.value = UiState.Success(it)
                             saveTokens(it.payload.token, it.payload.refreshToken)
                         }
                     }
                 }
             }
+        }
+    }
+
+    override fun shouldGoToFakeCartScreen(callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            callback.invoke(userSessionHelper.isUserLoggedIn())
         }
     }
 
@@ -69,7 +77,7 @@ class LoginScreenViewModel @Inject constructor(
     }
 
     override fun resetState() {
-        _uiState.value = LoginUiState.Idle()
+        _uiState.value = UiState.Idle()
     }
 
 
