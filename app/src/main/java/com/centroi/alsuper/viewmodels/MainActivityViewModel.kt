@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    private val landingPrefs: LandingPagePreferences
+    private val landingPrefs: LandingPagePreferences,
 ): ViewModel() {
 
     fun shouldShowLandingPage(): Boolean {

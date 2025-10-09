@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
+import com.centroi.alsuper.core.ui.components.UiState
 import com.centroi.alsuper.core.ui.components.editText.DateSelectionTextField
 import com.centroi.alsuper.core.ui.components.editText.EmailTextField
 import com.centroi.alsuper.core.ui.components.editText.NameTextField
@@ -43,12 +44,12 @@ fun RegistrationScreen(
 
     LaunchedEffect(uiState) {
         when (val state = uiState) {
-            is LoginUiState.Success -> {
+            is UiState.Success -> {
                 viewModel.navigateToConfirmationScreen()
                 viewModel.resetState()
             }
 
-            is LoginUiState.Error -> {
+            is UiState.Error -> {
                 snackbarHostState.showSnackbar(message = state.message.orEmpty())
                 viewModel.resetState()
             }

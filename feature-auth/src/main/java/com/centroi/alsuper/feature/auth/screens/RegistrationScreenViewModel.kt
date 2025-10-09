@@ -5,9 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.centroi.alsuper.core.data.ResultState
 import com.centroi.alsuper.core.data.models.login.LoginRegisterResponse
 import com.centroi.alsuper.core.data.models.login.LoginResponse
-import com.centroi.alsuper.core.data.usecases.login.GetRegisterUseCase
-import com.centroi.alsuper.core.data.usecases.login.SetConfirmationCodeUseCase
+import com.centroi.alsuper.core.data.usecases.register.GetRegisterUseCase
+import com.centroi.alsuper.core.data.usecases.register.SetConfirmationCodeUseCase
 import com.centroi.alsuper.core.data.userstate.UserSessionHelper
+import com.centroi.alsuper.core.ui.components.UiState
 import com.centroi.alsuper.core.ui.components.navcontroller.NavControllerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,8 +35,8 @@ abstract class RegistrationScreenAbstract() : ViewModel() {
 
     abstract fun resetState()
 
-    abstract val uiState: StateFlow<LoginUiState<LoginRegisterResponse>>
-    abstract val uiStateConfirmation: StateFlow<LoginUiState<LoginResponse>>
+    abstract val uiState: StateFlow<UiState<LoginRegisterResponse>>
+    abstract val uiStateConfirmation: StateFlow<UiState<LoginResponse>>
 }
 
 @HiltViewModel
@@ -47,13 +48,13 @@ class RegistrationScreenViewModel @Inject constructor(
 ) : RegistrationScreenAbstract() {
 
     private val _uiState =
-        MutableStateFlow<LoginUiState<LoginRegisterResponse>>(LoginUiState.Idle())
-    override val uiState: StateFlow<LoginUiState<LoginRegisterResponse>>
+        MutableStateFlow<UiState<LoginRegisterResponse>>(UiState.Idle())
+    override val uiState: StateFlow<UiState<LoginRegisterResponse>>
         get() = _uiState
 
     private val _uiStateConfirmation =
-        MutableStateFlow<LoginUiState<LoginResponse>>(LoginUiState.Idle())
-    override val uiStateConfirmation: StateFlow<LoginUiState<LoginResponse>>
+        MutableStateFlow<UiState<LoginResponse>>(UiState.Idle())
+    override val uiStateConfirmation: StateFlow<UiState<LoginResponse>>
         get() = _uiStateConfirmation
 
 
@@ -76,16 +77,16 @@ class RegistrationScreenViewModel @Inject constructor(
             ).collect { resultState ->
                 when (resultState) {
                     is ResultState.Error -> {
-                        _uiState.value = LoginUiState.Error(resultState.message.orEmpty())
+                        _uiState.value = UiState.Error(resultState.message.orEmpty())
                     }
 
                     is ResultState.Loading -> {
-                        _uiState.value = LoginUiState.Loading()
+                        _uiState.value = UiState.Loading()
                     }
 
                     is ResultState.Success -> {
                         resultState.data?.let {
-                            _uiState.value = LoginUiState.Success(it)
+                            _uiState.value = UiState.Success(it)
                             userSessionHelper.setUserID(it.payload.user.id)
                         }
                     }
@@ -101,16 +102,16 @@ class RegistrationScreenViewModel @Inject constructor(
                 .collect { resultState ->
                     when (resultState) {
                         is ResultState.Error -> {
-                            _uiStateConfirmation.value = LoginUiState.Error(resultState.message.orEmpty())
+                            _uiStateConfirmation.value = UiState.Error(resultState.message.orEmpty())
                         }
 
                         is ResultState.Loading -> {
-                            _uiStateConfirmation.value = LoginUiState.Loading()
+                            _uiStateConfirmation.value = UiState.Loading()
                         }
 
                         is ResultState.Success -> {
                             resultState.data?.let {
-                                _uiStateConfirmation.value = LoginUiState.Success(it)
+                                _uiStateConfirmation.value = UiState.Success(it)
                                 saveTokens(it.payload.token, it.payload.refreshToken)
                             }
                         }
@@ -138,7 +139,7 @@ class RegistrationScreenViewModel @Inject constructor(
     }
 
     override fun resetState() {
-        _uiState.value = LoginUiState.Idle()
+        _uiState.value = UiState.Idle()
     }
 
 

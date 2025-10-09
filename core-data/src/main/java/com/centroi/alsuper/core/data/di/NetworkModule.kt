@@ -68,7 +68,7 @@ object NetworkModule {
         // You might need to inject your base URL and converter factory here as well
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://api-ai-super-245879661756.northamerica-south1.run.app") // Replace with your actual base URL
+            .baseUrl("https://api-ai-super-245879661756.northamerica-south1.run.app")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

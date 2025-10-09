@@ -30,6 +30,8 @@ import com.centroi.alsuper.core.data.repositories.EmergencyContactsRepository
 import com.centroi.alsuper.core.data.repositories.EmergencyContactsRepositoryImpl
 import com.centroi.alsuper.core.data.repositories.LocationRepository
 import com.centroi.alsuper.core.data.repositories.LocationRepositoryImpl
+import com.centroi.alsuper.core.data.repositories.chat.ChatRepository
+import com.centroi.alsuper.core.data.repositories.chat.ChatRepositoryInt
 import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageDataProviderImpl
 import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageDataProviderInt
 import com.centroi.alsuper.core.data.repositories.login.LoginRepository
@@ -72,6 +74,12 @@ interface DataModule {
     fun bindLoginRepository(
         impl: LoginRepository
     ): LoginRepositoryInt
+
+    @Singleton
+    @Binds
+    fun bindChatRepository(
+        impl: ChatRepository
+    ): ChatRepositoryInt
 }
 
 class FakeLandingPageRepository @Inject constructor() : LandingPageRepository {
