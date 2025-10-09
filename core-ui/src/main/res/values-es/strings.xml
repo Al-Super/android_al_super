@@ -54,7 +54,7 @@
     <string name="add_contact_phone_placeholder">Ingresa el teléfono móvil</string>
     <string name="add_contact_legend">Esta información se mantendrá confidencial y sólo se utilizará en situaciones de emergencia.</string>
     <string name="add_contact_another_button">Agregar otro contacto</string>
-    <string name="add_contact_save_button">Guardar contactos</string>
+    <string name="add_contact_save_button">Guardar contacto</string>
     <string name="add_contact_skip_button">Omitir paso</string>
     <!--PROFILE-->
     <string name="profile_edit_button">Editar perfil</string>

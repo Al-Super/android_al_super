@@ -46,7 +46,6 @@ fun ContactsListScreen(
     navController: NavController,
     emergencyContactsViewModel: EmergencyContactsViewModel = hiltViewModel()
 ){
-    // Observe emergency contacts from ViewModel
     val contacts by emergencyContactsViewModel.emergencyContacts.collectAsState(initial = emptyList())
 
     ContactsListScreen(
@@ -211,18 +210,19 @@ fun MoreContactActionsMenu(
         )
 
         DropdownMenu(
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
             DropdownMenuItem(
-                text = { Text("Edit") },
+                text = { Text("Editar") },
                 onClick = {
                     expanded = false
                     onEdit()
                 }
             )
             DropdownMenuItem(
-                text = { Text("Delete") },
+                text = { Text("Eliminar") },
                 onClick = {
                     expanded = false
                     onDelete()

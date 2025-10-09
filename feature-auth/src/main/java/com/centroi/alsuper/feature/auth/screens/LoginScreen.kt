@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -98,9 +101,11 @@ internal fun LoginScreen(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = spacing.space10x)
+                .height(spacing.space16x)
             ,
-            painter = painterResource(R.drawable.ic_light_logo),
-            contentDescription = ""
+            painter = painterResource(R.drawable.ic_purple_logo),
+            contentDescription = "",
+            contentScale = ContentScale.FillHeight
         )
         Column(
             modifier = Modifier

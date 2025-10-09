@@ -62,7 +62,7 @@ fun MainNavigation(
         composable(Routes.RegistrationScreen.name) { RegistrationScreen() }
         composable(Routes.FakeHomeScreen.name) { FakeHomeScreen(navController) }
         composable(Routes.CartScreen.name) { CartScreen(navController) }
-        composable(Routes.ProfileScreen.name) { ProfileScreen() }
+        composable(Routes.ProfileScreen.name) { ProfileScreen(loginCallback) }
         composable(Routes.ContactsListScreen.name) { ContactsListScreen(navController = navController) }
         composable(Routes.AddContactScreen.name) { AddContactScreen(navController = navController) }
         composable(Routes.InformationScreen.name) { InformationScreen() }

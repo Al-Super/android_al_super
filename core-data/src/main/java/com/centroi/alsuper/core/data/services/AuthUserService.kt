@@ -7,8 +7,10 @@ import com.centroi.alsuper.core.data.models.login.LoginRegisterRequest
 import com.centroi.alsuper.core.data.models.login.LoginRegisterResponse
 import com.centroi.alsuper.core.data.models.login.LoginRequest
 import com.centroi.alsuper.core.data.models.login.LoginResponse
+import com.centroi.alsuper.core.data.models.user.AuthMeResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 
@@ -25,4 +27,7 @@ interface AuthUserService {
 
     @PUT("/api/auth/activate")
     suspend fun loginConfirmationService(@Body loginRequest: LoginConfirmationRequest): Response<LoginResponse>
+
+    @GET("/api/auth/me")
+    suspend fun authUserMe(): Response<AuthMeResponse>
 }

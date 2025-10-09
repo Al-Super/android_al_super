@@ -7,17 +7,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,15 +61,17 @@ fun RealAppTopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = dimens.space4x)
+            .padding(vertical = dimens.space2x)
             .windowInsetsPadding(WindowInsets.statusBars)
             .background(YellowBrown),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            modifier = Modifier,
-            painter = painterResource(id = R.drawable.ic_dark_logo),
-            contentDescription = "Logo"
+            modifier = Modifier.height(dimens.space10x),
+            painter = painterResource(id = R.drawable.ic_purple_logo),
+            contentDescription = "Logo",
+            contentScale = ContentScale.FillHeight
         )
 
         TransparentWhiteButton(
@@ -92,7 +96,7 @@ private fun FakeAppTopBar(
     val dimens = LocalSpacing.current
     Row(
         modifier = Modifier.fillMaxWidth()
-            .padding(vertical = dimens.space4x)
+            .padding(vertical = dimens.space2x)
             .windowInsetsPadding(WindowInsets.statusBars),
         horizontalArrangement = Arrangement.Center
     ) {
@@ -107,8 +111,9 @@ private fun FakeAppTopBar(
                                 launchSingleTop = true
                             }                        }
                     )
-                },
-            painter = painterResource(id = R.drawable.ic_light_logo),
+                }
+                .height(dimens.space14x),
+            painter = painterResource(id = R.drawable.ic_purple_logo),
             contentDescription = "Logo"
         )
     }

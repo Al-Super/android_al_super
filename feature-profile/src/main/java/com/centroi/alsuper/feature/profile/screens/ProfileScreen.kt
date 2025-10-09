@@ -1,6 +1,7 @@
 package com.centroi.alsuper.feature.profile.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,27 +14,56 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.centroi.alsuper.core.ui.AlSuperTheme
-import com.centroi.alsuper.core.ui.Brown
 import com.centroi.alsuper.core.ui.Dimens
 import com.centroi.alsuper.core.ui.LocalFontWeight
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
-import com.centroi.alsuper.core.ui.YellowStrong
+import com.centroi.alsuper.core.ui.components.UiState
 import com.centroi.alsuper.core.ui.components.container.AlSuperCard
 import com.centroi.alsuper.core.ui.components.container.AlSuperCircularContainer
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    loginCallback : MutableState<Boolean>,
+    viewModel: ProfileScreenViewModelAbstract = hiltViewModel<ProfileScreenViewModel>()
+) {
     val spacing = LocalSpacing.current
     val fontWeight = LocalFontWeight.current
+    val profileData = remember { mutableStateOf(ProfileData()) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState){
+        viewModel.loadProfile()
+        when(val state = uiState){
+            is UiState.Success -> {
+                profileData.value = ProfileData(
+                    name = state.data?.payload?.user?.name,
+                    lastName = state.data?.payload?.user?.lastName,
+                    email = state.data?.payload?.user?.email,
+                    birthdate = state.data?.payload?.user?.birthdate,
+                    phoneNumber = state.data?.payload?.user?.phoneNumber,
+                )
+            }
+            is UiState.Error -> {
+                // Handle error state if needed
+            }
+            else -> {}
+        }
+    }
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
@@ -41,15 +71,27 @@ fun ProfileScreen() {
             .padding(spacing.space3x)
 
     ) {
-        ProfileDataContainer(spacing, fontWeight)
-        ProfileActions(spacing, fontWeight)
+        ProfileDataContainer(spacing, fontWeight, profileData)
+        ProfileActions(
+            spacing = spacing,
+            fontWeight = fontWeight,
+            onClickChangePassword = {
+
+            },
+            onClickCloseSession = {
+                loginCallback.value = false
+                viewModel.closeSession()
+            }
+        )
     }
 }
 
 @Composable
 private fun ProfileActions(
     spacing: Dimens,
-    fontWeight: com.centroi.alsuper.core.ui.FontWeight
+    fontWeight: com.centroi.alsuper.core.ui.FontWeight,
+    onClickChangePassword: () -> Unit,
+    onClickCloseSession: () -> Unit
 ) {
     Spacer(
         modifier = Modifier
@@ -63,7 +105,8 @@ private fun ProfileActions(
         spacing,
         fontWeight,
         R.drawable.ic_key,
-        R.string.profile_change_password
+        R.string.profile_change_password,
+        onClick = onClickChangePassword
     )
 
     Spacer(
@@ -78,7 +121,8 @@ private fun ProfileActions(
         spacing,
         fontWeight,
         R.drawable.ic_logout,
-        R.string.profile_log_out
+        R.string.profile_log_out,
+        onClick = onClickCloseSession
     )
 
     Spacer(
@@ -95,11 +139,13 @@ private fun ProfileActionOption(
     spacing: Dimens,
     fontWeight: com.centroi.alsuper.core.ui.FontWeight,
     icon: Int,
-    text: Int
+    text: Int,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(
                 top = spacing.space3x,
                 bottom = spacing.space3x
@@ -125,7 +171,8 @@ private fun ProfileActionOption(
 @Composable
 private fun ProfileDataContainer(
     spacing: Dimens,
-    fontWeight: com.centroi.alsuper.core.ui.FontWeight
+    fontWeight: com.centroi.alsuper.core.ui.FontWeight,
+    profileData: MutableState<ProfileData>
 ) {
     AlSuperCard(
         modifier = Modifier
@@ -138,21 +185,16 @@ private fun ProfileDataContainer(
                 .background(MaterialTheme.colorScheme.onTertiaryContainer)
                 .padding(spacing.space3x)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Text(stringResource(id = R.string.profile_edit_button))
-            }
-
-            UserName(spacing)
+            UserName(spacing, profileData.value.name.orEmpty(), profileData.value.lastName.orEmpty())
 
             Spacer(modifier = Modifier.height(spacing.space3x))
 
             UserData(
                 spacing,
-                fontWeight
+                fontWeight,
+                profileData.value.birthdate.orEmpty(),
+                profileData.value.email.orEmpty(),
+                profileData.value.phoneNumber.orEmpty(),
             )
         }
     }
@@ -161,7 +203,10 @@ private fun ProfileDataContainer(
 @Composable
 private fun UserData(
     spacing: Dimens,
-    fontWeight: com.centroi.alsuper.core.ui.FontWeight
+    fontWeight: com.centroi.alsuper.core.ui.FontWeight,
+    birthdate: String,
+    email: String,
+    phoneNumber: String,
 ) {
     Text(
         text = stringResource(id = R.string.profile_birthdate),
@@ -170,7 +215,7 @@ private fun UserData(
         )
     )
     Text(
-        text = "12/03/1998",
+        text = birthdate,
         style = MaterialTheme.typography.titleMedium.copy(
             fontWeight = FontWeight(fontWeight.weight400x)
         )
@@ -184,7 +229,7 @@ private fun UserData(
         )
     )
     Text(
-        text = "mariagarcia@gmail.com",
+        text = email,
         style = MaterialTheme.typography.titleMedium.copy(
             fontWeight = FontWeight(fontWeight.weight400x)
         )
@@ -198,7 +243,7 @@ private fun UserData(
         )
     )
     Text(
-        text = "+52 1 55 1234 5678",
+        text = "${phoneNumber}",
         style = MaterialTheme.typography.titleMedium.copy(
             fontWeight = FontWeight(fontWeight.weight400x)
         )
@@ -206,20 +251,24 @@ private fun UserData(
 }
 
 @Composable
-private fun UserName(spacing: Dimens) {
+private fun UserName(
+    spacing: Dimens,
+    name: String,
+    lastName: String,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AlSuperCircularContainer(
-            initials = "MG",
+            initials = (name.firstOrNull()?.toString() ?: "") + (lastName.firstOrNull()?.toString() ?: ""),
             backgroundColor = MaterialTheme.colorScheme.surfaceTint,
             size = spacing.imageMedium
         )
         Spacer(modifier = Modifier.height(spacing.space3x))
         Text(
-            text = "María García",
+            text = name + " " + lastName,
             style = MaterialTheme.typography.titleLarge
         )
     }
@@ -229,6 +278,6 @@ private fun UserName(spacing: Dimens) {
 @Composable
 fun PreviewProfileScreen() {
     AlSuperTheme {
-        ProfileScreen()
+        ProfileScreen(remember { mutableStateOf(false) })
     }
 }

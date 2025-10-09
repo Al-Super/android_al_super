@@ -98,7 +98,7 @@ fun ConfirmationScreenContent(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = spacing.space10x),
-            painter = painterResource(R.drawable.ic_light_logo),
+            painter = painterResource(R.drawable.ic_purple_logo),
             contentDescription = ""
         )
         Column(
