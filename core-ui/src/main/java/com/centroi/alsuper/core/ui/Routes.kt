@@ -17,7 +17,8 @@ enum class Routes {
     AddContactScreen,
     EditContactScreen,
     SplashScreen,
-    FakeArticleScreen
+    FakeArticleScreen,
+    ConfirmationScreen
 }
 
 @Suppress("MaxLineLength")

@@ -11,6 +11,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,14 +25,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.centroi.alsuper.core.ui.R
 
 @Composable
-fun PasswordTextField() {
-    var password by remember { mutableStateOf("") }
+fun PasswordTextField(
+    password: MutableState<String>
+) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     Column {
         OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
+            value = password.value,
+            onValueChange = { password.value = it },
             label = { Text(stringResource(R.string.login_password)) },
             placeholder = { Text(stringResource(R.string.login_password_placeholder)) },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -53,5 +55,5 @@ fun PasswordTextField() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewPasswordTextField() {
-    PasswordTextField()
+    PasswordTextField(remember { mutableStateOf("") })
 }

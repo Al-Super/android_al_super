@@ -56,12 +56,17 @@ import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.core.ui.components.navigation.bottomNavigation.AlSuperBottomNavigationBar
 import com.centroi.alsuper.core.ui.components.navigation.AlSuperTopNavigationBar
 import com.centroi.alsuper.core.common.location.LocationWorkManager
+import com.centroi.alsuper.core.ui.components.navcontroller.NavControllerManager
 import com.centroi.alsuper.viewmodels.MainActivityViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var navControllerManager: NavControllerManager
 
     private val viewModel: MainActivityViewModel by viewModels()
 
@@ -70,7 +75,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MainScreen(
-                viewModel = viewModel
+                viewModel = viewModel,
+                navControllerManager = navControllerManager
             )
         }
     }
@@ -79,7 +85,8 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    viewModel: MainActivityViewModel
+    viewModel: MainActivityViewModel,
+    navControllerManager: NavControllerManager
 ) {
     val navController = rememberNavController()
     val context = LocalContext.current
@@ -89,7 +96,7 @@ fun MainScreen(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
-
+    navControllerManager.initializeNavController(navController)
     AlSuperTheme(
         isFakeApp = onFakeApp.value,
     ) {
@@ -123,7 +130,7 @@ fun MainScreen(
             ) {
                 MainNavigation(
                     navController = navController,
-                    loginCallback = { signedIn.value = it },
+                    loginCallback = signedIn,
                     shouldShowLandingPage = viewModel.shouldShowLandingPage(),
                     onChangeAppTheme = onFakeApp
                 )

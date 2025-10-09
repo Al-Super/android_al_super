@@ -18,6 +18,8 @@ package com.centroi.alsuper.core.database.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,6 +29,8 @@ import com.centroi.alsuper.core.database.AppDatabase
 import com.centroi.alsuper.core.database.LandingPageDao
 import com.centroi.alsuper.core.database.tables.EmergencyContactDao
 import com.centroi.alsuper.core.database.tables.LocationDao
+import com.centroi.alsuper.core.database.tables.UserIDDao
+import com.centroi.alsuper.core.database.tables.UserSessionDao
 import javax.inject.Singleton
 
 @Module
@@ -53,11 +57,37 @@ class DatabaseModule {
 
     @Provides
     @Singleton
+    fun provideUserSessionDao(appDatabase: AppDatabase): UserSessionDao {
+        return appDatabase.userSessionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserId(appDatabase: AppDatabase): UserIDDao {
+        return appDatabase.userIdDao()
+    }
+
+    @Provides
+    @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    """
+                CREATE TABLE IF NOT EXISTS UserID (
+                id INTEGER PRIMARY KEY NOT NULL,
+                userId TEXT NOT NULL
+            )
+        """.trimIndent()
+                )
+            }
+        }
         return Room.databaseBuilder(
             appContext,
             AppDatabase::class.java,
             "LandingPage"
-        ).build()
+        )
+            .addMigrations(MIGRATION_2_3)
+            .build()
     }
 }

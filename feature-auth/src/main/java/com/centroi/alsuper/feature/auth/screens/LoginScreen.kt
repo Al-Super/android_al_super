@@ -12,15 +12,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
 import com.centroi.alsuper.core.ui.Routes
@@ -30,22 +41,50 @@ import com.centroi.alsuper.core.ui.components.editText.PasswordTextField
 @Composable
 fun LoginScreen(
     navController: NavController,
-    loginCallback: (Boolean) -> Unit,
+    loginCallback: MutableState<Boolean>,
+    viewModel: LoginScreenViewModelAbstract = hiltViewModel<LoginScreenViewModel>()
 ) {
-    LoginScreen(
-        navigateToRegister = { navController.navigate(Routes.RegistrationScreen.name) { launchSingleTop = true} },
-        loginCallback = {
-            loginCallback(it)
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val dimens = LocalSpacing.current
+
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is LoginUiState.Success -> {
+                loginCallback.value = true
+                viewModel.goToFakeCartScreen()
+                viewModel.resetState()
+            }
+            is LoginUiState.Error -> {
+                snackbarHostState.showSnackbar(message = state.message.orEmpty())
+                viewModel.resetState()
+            }
+            else -> { }
         }
-    )
+    }
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(
+                modifier = Modifier.padding(bottom = dimens.space6x),
+                hostState = snackbarHostState
+            )
+        }
+    ) { _ ->
+        LoginScreen(
+            navigateToRegister = { navController.navigate(Routes.RegistrationScreen.name) { launchSingleTop = true} },
+            viewModel = viewModel
+        )
+    }
 }
 
 @Composable
 internal fun LoginScreen(
     navigateToRegister: () -> Unit = {},
-    loginCallback: (Boolean) -> Unit = {}
+    viewModel: LoginScreenViewModelAbstract
 ) {
     val spacing = LocalSpacing.current
+    val email = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
     Box {
         Image(
             modifier = Modifier
@@ -70,9 +109,9 @@ internal fun LoginScreen(
                 textAlign = TextAlign.Start
 
             )
-            EmailTextField()
+            EmailTextField(email)
             Spacer(modifier = Modifier.padding(top = spacing.space3x))
-            PasswordTextField()
+            PasswordTextField(password)
             Text(
                 text = stringResource(id = R.string.login_forgot_password).uppercase(),
                 modifier = Modifier
@@ -84,7 +123,10 @@ internal fun LoginScreen(
             )
             Button(
                 onClick = {
-                    loginCallback(true)
+                    viewModel.tryLogIn(
+                        email = email.value,
+                        password = password.value,
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -105,7 +147,7 @@ internal fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = spacing.space6x)
-                    .clickable (
+                    .clickable(
                         onClick = { navigateToRegister() }
                     ),
                 textAlign = TextAlign.Center,
@@ -119,5 +161,5 @@ internal fun LoginScreen(
 @Composable
 @Preview
 fun PreviewLoginScreen() {
-    LoginScreen()
+    LoginScreen(rememberNavController(),remember { mutableStateOf(false) })
 }

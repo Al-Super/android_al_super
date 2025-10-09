@@ -11,10 +11,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,8 +22,9 @@ import java.util.Calendar
 import java.util.Locale
 
 @Composable
-fun DateSelectionTextField() {
-    var date by remember { mutableStateOf("") }
+fun DateSelectionTextField(
+    date: MutableState<String>
+) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
 
@@ -35,7 +35,7 @@ fun DateSelectionTextField() {
             // Update date with the selected value
             calendar.set(year, month, dayOfMonth)
             val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            date = format.format(calendar.time)
+            date.value = format.format(calendar.time)
         },
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),
@@ -44,7 +44,7 @@ fun DateSelectionTextField() {
 
     Column {
         OutlinedTextField(
-            value = date,
+            value = date.value,
             onValueChange = {},
             label = { Text("Date") },
             placeholder = { Text("Select a date") },
@@ -62,5 +62,5 @@ fun DateSelectionTextField() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewDateSelectionTextField() {
-    DateSelectionTextField()
+    DateSelectionTextField(remember { mutableStateOf("") })
 }

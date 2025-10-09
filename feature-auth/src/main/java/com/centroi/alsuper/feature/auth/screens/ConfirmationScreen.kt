@@ -21,8 +21,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,15 +43,52 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
 
 
-
 @Composable
 fun ConfirmationScreen(
-    navigateToRegister: () -> Unit = {},
-    loginCallback: (Boolean) -> Unit = {}
+    loginCallback: MutableState<Boolean>,
+    viewModel: RegistrationScreenAbstract = hiltViewModel<RegistrationScreenViewModel>()
+) {
+    val uiState by viewModel.uiStateConfirmation.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val dimens = LocalSpacing.current
+
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is LoginUiState.Success -> {
+                loginCallback.value = true
+                viewModel.navigateToFakeArticlesScreen()
+            }
+
+            is LoginUiState.Error -> {
+                snackbarHostState.showSnackbar(message = state.message.orEmpty())
+                viewModel.resetState()
+            }
+
+            else -> {}
+        }
+    }
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(
+                modifier = Modifier.padding(bottom = dimens.space6x),
+                hostState = snackbarHostState
+            )
+        }
+    ) { _ ->
+        ConfirmationScreenContent(loginCallback, viewModel)
+    }
+}
+
+@Composable
+fun ConfirmationScreenContent(
+    loginCallback: MutableState<Boolean>,
+    viewModel: RegistrationScreenAbstract
 ) {
     val spacing = LocalSpacing.current
     var smsCode by remember { mutableStateOf("") }
@@ -54,8 +96,7 @@ fun ConfirmationScreen(
         Image(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = spacing.space10x)
-            ,
+                .padding(top = spacing.space10x),
             painter = painterResource(R.drawable.ic_light_logo),
             contentDescription = ""
         )
@@ -81,7 +122,9 @@ fun ConfirmationScreen(
                 codeLength = 6
             )
             Button(
-                onClick = { loginCallback(true) },
+                onClick = {
+                    viewModel.tryConfirmUser(smsCode)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = spacing.space6x),
@@ -93,7 +136,7 @@ fun ConfirmationScreen(
                 )
             ) {
                 Text(
-                    text = stringResource(id= R.string.confirmation_screen_confirmation)
+                    text = stringResource(id = R.string.confirmation_screen_confirmation)
                 )
             }
             Text(
@@ -102,7 +145,9 @@ fun ConfirmationScreen(
                     .fillMaxWidth()
                     .padding(top = spacing.space6x)
                     .clickable(
-                        onClick = { navigateToRegister() }
+                        onClick = {
+
+                        }
                     ),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.labelSmall
@@ -178,7 +223,7 @@ fun SmsCodeTextField(
 }
 
 @Composable
-@Preview (showBackground = true)
+@Preview(showBackground = true)
 fun PreviewConfirmationScreen() {
-    ConfirmationScreen()
+    ConfirmationScreen(remember { mutableStateOf(false) })
 }

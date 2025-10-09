@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "14227097bb2bd3480c5ac038b02bd8c1",
+    "version": 2,
+    "identityHash": "578b6367382656d5acc3b77012a467c4",
     "entities": [
       {
         "tableName": "LandingPage",
@@ -149,12 +149,38 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "UserID",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userId` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '14227097bb2bd3480c5ac038b02bd8c1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '578b6367382656d5acc3b77012a467c4')"
     ]
   }
 }
