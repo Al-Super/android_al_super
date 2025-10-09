@@ -36,6 +36,8 @@ import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageDataPro
 import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageDataProviderInt
 import com.centroi.alsuper.core.data.repositories.login.LoginRepository
 import com.centroi.alsuper.core.data.repositories.login.LoginRepositoryInt
+import com.centroi.alsuper.core.data.repositories.login.ProfileRepository
+import com.centroi.alsuper.core.data.repositories.login.ProfileRepositoryInt
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -80,6 +82,12 @@ interface DataModule {
     fun bindChatRepository(
         impl: ChatRepository
     ): ChatRepositoryInt
+
+    @Singleton
+    @Binds
+    fun bindProfileRepository(
+        impl: ProfileRepository
+    ): ProfileRepositoryInt
 }
 
 class FakeLandingPageRepository @Inject constructor() : LandingPageRepository {

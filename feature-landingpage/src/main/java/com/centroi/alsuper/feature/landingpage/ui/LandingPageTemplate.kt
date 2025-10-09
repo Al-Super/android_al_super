@@ -41,7 +41,7 @@ fun LandingPageTemplate(
     var isCheckedPrivacy by remember { mutableStateOf(false) }
     var isCheckedDataConsent by remember { mutableStateOf(false) }
     val dimens = LocalSpacing.current
-    val logoResource = R.drawable.ic_dark_logo
+    val logoResource = R.drawable.ic_purple_logo
     Box(
         modifier = modifier,
     ) {

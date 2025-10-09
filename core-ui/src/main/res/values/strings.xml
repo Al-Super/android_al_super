@@ -53,7 +53,7 @@
     <string name="add_contact_phone_placeholder">Enter mobile phone</string>
     <string name="add_contact_legend">* This information will be kept confidential and used only in emergency situations.</string>
     <string name="add_contact_another_button">Add another contact</string>
-    <string name="add_contact_save_button">Save contacts</string>
+    <string name="add_contact_save_button">Save contact</string>
     <string name="add_contact_skip_button">Skip Step</string>
     <!--PROFILE-->
     <string name="profile_edit_button">Edit Profile</string>

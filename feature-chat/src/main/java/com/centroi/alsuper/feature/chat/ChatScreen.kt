@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -42,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -228,8 +230,10 @@ private fun ChatSheetHeader(onShowChat: MutableState<Boolean>, dimens: Dimens) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Image(
-            painter = painterResource(R.drawable.ic_dark_logo),
-            contentDescription = ""
+            modifier = Modifier.height(dimens.space14x),
+            painter = painterResource(id = R.drawable.ic_purple_logo),
+            contentDescription = "Logo",
+            contentScale = ContentScale.FillHeight
         )
         Image(
             modifier = Modifier
@@ -374,10 +378,11 @@ private fun ChatTextField(
 private fun EmptyChatContainer(dimens: Dimens) {
     Image(
         modifier = Modifier
-            .size(dimens.space10x)
+            .size(dimens.space16x)
             .padding(bottom = dimens.space3x),
-        painter = painterResource(R.drawable.ic_chat_recommendation),
-        contentDescription = ""
+        painter = painterResource(R.drawable.ic_rounded_logo),
+        contentDescription = "",
+        contentScale = ContentScale.FillHeight
     )
     Text(
         modifier = Modifier.padding(bottom = dimens.space3x),

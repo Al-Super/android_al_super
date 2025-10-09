@@ -3,13 +3,13 @@ package com.centroi.alsuper.feature.contacts.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,8 +32,9 @@ import androidx.navigation.NavController
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import com.centroi.alsuper.core.ui.Dimens
 import com.centroi.alsuper.core.ui.LocalSpacing
+import com.centroi.alsuper.core.ui.MainYellow
 import com.centroi.alsuper.core.ui.R
-import com.centroi.alsuper.core.ui.components.button.MainButton
+import com.centroi.alsuper.core.ui.YellowLightGray
 import com.centroi.alsuper.core.ui.components.editText.NameTextField
 import com.centroi.alsuper.core.ui.components.editText.PhoneNumberTextField
 import com.centroi.alsuper.feature.contacts.viewmodel.EmergencyContactsViewModel
@@ -108,6 +110,7 @@ internal fun AddAndEditContactScreen(
             saveContact = saveContact,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
+                .padding(bottom = spacing.space6x)
                 .fillMaxWidth()
                 .heightIn(min = 56.dp)
         )
@@ -206,13 +209,6 @@ private fun ContactFormContent(
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Thin),
         )
-
-        if (contactId == null) {
-            MainButton(
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(R.string.add_contact_another_button)
-            ) {}
-        }
     }
 }
 
@@ -225,6 +221,12 @@ private fun SaveContactButton(
     modifier: Modifier = Modifier
 ) {
     Button(
+        colors = ButtonColors(
+            containerColor = MainYellow,
+            contentColor = Color.Black,
+            disabledContentColor = Color.White,
+            disabledContainerColor = YellowLightGray,
+        ),
         onClick = {
             if (contactId == null) {
                 viewModel.insertContact(formState.name, formState.surname, formState.phoneNumber)

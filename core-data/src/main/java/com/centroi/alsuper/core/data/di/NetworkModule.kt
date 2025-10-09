@@ -38,8 +38,7 @@ object NetworkModule {
             .build()
     }
 
-    // 3. This is the provider that fixes the error.
-    //    It provides an AuthUserService specifically for refreshing the token.
+    //  AuthUserService specifically for refreshing the token, only use in TokenInterceptor
     @Provides
     @Singleton
     @Named("refresh")

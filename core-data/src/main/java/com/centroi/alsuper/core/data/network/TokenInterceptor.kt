@@ -12,7 +12,8 @@ import javax.inject.Named
 
 class TokenInterceptor @Inject constructor(
     private val userSessionHelper: UserSessionHelper,
-    @Named("refresh") private val refreshAuthUserService: AuthUserService
+    @Named("refresh") private val refreshAuthUserService: AuthUserService,
+    private val jwtVerifier: JWTVerifier
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -22,12 +23,13 @@ class TokenInterceptor @Inject constructor(
             token = userSessionHelper.getToken()
             refreshToken = userSessionHelper.getRefreshToken()
         }
-        val verifier = JWTVerifier {
-            token = getNewToken(refreshToken, token)
-        }
 
         val currentToken = token
-        // if (currentToken == null || !verifier.isValid(currentToken)) {  }
+        if (!currentToken.isNullOrEmpty()) {
+            jwtVerifier.isValid(currentToken) {
+                token = getNewToken(refreshToken, currentToken)
+            }
+        }
         val request: Request = chain.request().newBuilder()
             .apply {
                 // Use the original 'token' variable here, as it might have been refreshed
