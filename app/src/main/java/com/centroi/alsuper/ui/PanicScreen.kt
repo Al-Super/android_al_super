@@ -15,13 +15,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,73 +33,93 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.centroi.alsuper.core.ui.LocalSpacing
 import com.centroi.alsuper.core.ui.R
 import com.centroi.alsuper.core.ui.YellowLight
+import com.centroi.alsuper.core.ui.components.UiState
 import com.centroi.alsuper.core.ui.components.button.TransparentWhiteButton
+import com.centroi.alsuper.feature.contacts.viewmodel.PanicScreenViewModel
+import com.centroi.alsuper.feature.contacts.viewmodel.PanicScreenViewModelAbstract
 import kotlin.math.roundToInt
 
 @Composable
 fun PanicScreen(
-    shouldClose: MutableState<Boolean>
+    showSuccessDialog: MutableState<Boolean>,
+    shouldClose: MutableState<Boolean>,
+    viewModel: PanicScreenViewModelAbstract = hiltViewModel<PanicScreenViewModel>()
 ) {
     val dimens = LocalSpacing.current
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Row (
-            modifier = Modifier
-                .padding(dimens.space4x)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Confirmación de SOS",
-                fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-            TransparentWhiteButton(
-                text = "Close",
-                icon = painterResource(R.drawable.ic_close)
-            ) {
-                shouldClose.value = true
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is UiState.Success -> {
+                showSuccessDialog.value = true
+                viewModel.resetState()
             }
-        }
-        Box (
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .background(
-                    brush = Brush.radialGradient(
-                        colors = listOf(Color.Red, Color.Transparent),
-                        center = androidx.compose.ui.geometry.Offset.Unspecified,
-                        radius = 700f
-                    )
-                )
-        ) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(horizontal = dimens.space12x),
-                text = "Cuando te sientas en peligro, desliza el botón de abajo para compartir tu ubicacion con tu lista de contactos.",
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-        Row (
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            SlideToUnlockButton { shouldClose.value = false }
+            is UiState.Error -> { }
+            else -> { }
         }
     }
+
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Row (
+                modifier = Modifier
+                    .padding(dimens.space4x)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Confirmación de SOS",
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+                TransparentWhiteButton(
+                    text = "Cerrar",
+                    icon = painterResource(R.drawable.ic_close)
+                ) {
+                    shouldClose.value = false
+                }
+            }
+            Box (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(Color.Red, Color.Transparent),
+                            center = androidx.compose.ui.geometry.Offset.Unspecified,
+                            radius = 700f
+                        )
+                    )
+            ) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(horizontal = dimens.space12x),
+                    text = "Cuando te sientas en peligro, desliza el botón de abajo para compartir tu ubicacion con tu lista de contactos.",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                SlideToUnlockButton {
+                    viewModel.sendSos()
+                }
+            }
+        }
 }
 
 @Composable
@@ -130,7 +148,7 @@ fun SlideToUnlockButton(
             )
     ) {
         Text(
-            text = if (isComplete) "Unlocked" else "Desliza para mandar alerta",
+            text = "Desliza para mandar alerta",
             modifier = Modifier
                 .padding(end = dimens.space2x)
                 .fillMaxWidth()

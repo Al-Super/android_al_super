@@ -34,7 +34,7 @@ fun DateSelectionTextField(
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
             // Update date with the selected value
             calendar.set(year, month, dayOfMonth)
-            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             date.value = format.format(calendar.time)
         },
         calendar.get(Calendar.YEAR),

@@ -10,20 +10,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -41,6 +46,7 @@ import com.centroi.alsuper.core.ui.Routes
 import com.centroi.alsuper.core.ui.components.UiState
 import com.centroi.alsuper.core.ui.components.editText.EmailTextField
 import com.centroi.alsuper.core.ui.components.editText.PasswordTextField
+import com.centroi.alsuper.feature.auth.screens.dialog.RestorePasswordDialog
 
 @Composable
 fun LoginScreen(
@@ -51,6 +57,12 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val dimens = LocalSpacing.current
+    val isLoading = remember { mutableStateOf(false) }
+
+    val snackbarMessage by viewModel.snackbarMessage.collectAsState()
+    val showRestoreDialog by viewModel.showRestoreDialog.collectAsState()
+    val showEmailDialog = remember { mutableStateOf(false) }
+    val emailForReset = remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
         viewModel.shouldGoToFakeCartScreen { isLoggedIn ->
             loginCallback.value = isLoggedIn
@@ -58,7 +70,9 @@ fun LoginScreen(
                 viewModel.goToFakeCartScreen()
             }
         }
+        viewModel.resetState()
     }
+
     LaunchedEffect(uiState) {
         when (val state = uiState) {
             is UiState.Success -> {
@@ -66,13 +80,29 @@ fun LoginScreen(
                 viewModel.goToFakeCartScreen()
                 viewModel.resetState()
             }
+
             is UiState.Error -> {
-                snackbarHostState.showSnackbar(message = state.message.orEmpty())
+                snackbarHostState.showSnackbar(message = "Hubo un error al iniciar sesión")
                 viewModel.resetState()
             }
-            else -> { }
+
+            is UiState.Loading -> {
+                isLoading.value = true
+            }
+
+            is UiState.Idle -> {
+                isLoading.value = false
+            }
         }
     }
+
+    LaunchedEffect(snackbarMessage) {
+        snackbarMessage?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.clearSnackbarMessage()
+        }
+    }
+
     Scaffold(
         snackbarHost = {
             SnackbarHost(
@@ -81,9 +111,67 @@ fun LoginScreen(
             )
         }
     ) { _ ->
-        LoginScreen(
-            navigateToRegister = { navController.navigate(Routes.RegistrationScreen.name) { launchSingleTop = true} },
-            viewModel = viewModel
+        if (isLoading.value) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        } else {
+            LoginScreen(
+                navigateToRegister = {
+                    navController.navigate(Routes.RegistrationScreen.name) {
+                        launchSingleTop = true
+                    }
+                },
+                viewModel = viewModel,
+                onForgotPassword = { showEmailDialog.value = true }
+            )
+        }
+        if (showEmailDialog.value) {
+            var email by remember { mutableStateOf("") }
+            AlertDialog(
+                containerColor = MaterialTheme.colorScheme.background,
+                onDismissRequest = { showEmailDialog.value = false },
+                title = { Text("Reiniciar contraseña") },
+                text = {
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text("Email") }
+                    )
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        emailForReset.value = email
+                        viewModel.forgotPassword(email)
+                        showEmailDialog.value = false
+                    }) {
+                        Text("Enviar")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showEmailDialog.value = false }) {
+                        Text("Cancelar")
+                    }
+                }
+            )
+        }
+        RestorePasswordDialog (
+            showDialog = showRestoreDialog,
+            onDismiss = { viewModel.closeDialog() },
+            onRestorePassword = { code, password, confirmPassword ->
+                viewModel.restorePassword(
+                    email = emailForReset.value,
+                    password = password,
+                    confirmPassword = confirmPassword,
+                    code = code
+                )
+            },
+            onRetry = { viewModel.forgotPassword(emailForReset.value) }
         )
     }
 }
@@ -91,7 +179,8 @@ fun LoginScreen(
 @Composable
 internal fun LoginScreen(
     navigateToRegister: () -> Unit = {},
-    viewModel: LoginScreenViewModelAbstract
+    viewModel: LoginScreenViewModelAbstract,
+    onForgotPassword: () -> Unit = {}
 ) {
     val spacing = LocalSpacing.current
     val email = remember { mutableStateOf("") }
@@ -101,8 +190,7 @@ internal fun LoginScreen(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = spacing.space10x)
-                .height(spacing.space16x)
-            ,
+                .height(spacing.space16x),
             painter = painterResource(R.drawable.ic_purple_logo),
             contentDescription = "",
             contentScale = ContentScale.FillHeight
@@ -129,7 +217,8 @@ internal fun LoginScreen(
                 text = stringResource(id = R.string.login_forgot_password).uppercase(),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = spacing.space2x),
+                    .padding(top = spacing.space2x)
+                    .clickable { onForgotPassword() },
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.labelSmall
 
@@ -152,7 +241,7 @@ internal fun LoginScreen(
                 )
             ) {
                 Text(
-                    text = stringResource(id= R.string.starting_point_sign_in)
+                    text = stringResource(id = R.string.starting_point_sign_in)
                 )
             }
             Text(
@@ -171,8 +260,9 @@ internal fun LoginScreen(
     }
 }
 
+
 @Composable
 @Preview
 fun PreviewLoginScreen() {
-    LoginScreen(rememberNavController(),remember { mutableStateOf(false) })
+    LoginScreen(rememberNavController(), remember { mutableStateOf(false) })
 }

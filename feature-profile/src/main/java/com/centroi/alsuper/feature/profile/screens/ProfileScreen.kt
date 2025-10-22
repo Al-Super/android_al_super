@@ -12,10 +12,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,20 +39,24 @@ import com.centroi.alsuper.core.ui.R
 import com.centroi.alsuper.core.ui.components.UiState
 import com.centroi.alsuper.core.ui.components.container.AlSuperCard
 import com.centroi.alsuper.core.ui.components.container.AlSuperCircularContainer
+import com.centroi.alsuper.feature.profile.screens.dialog.RestorePasswordDialog
 
 @Composable
 fun ProfileScreen(
-    loginCallback : MutableState<Boolean>,
+    loginCallback: MutableState<Boolean>,
     viewModel: ProfileScreenViewModelAbstract = hiltViewModel<ProfileScreenViewModel>()
 ) {
     val spacing = LocalSpacing.current
     val fontWeight = LocalFontWeight.current
     val profileData = remember { mutableStateOf(ProfileData()) }
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarMessage by viewModel.snackbarMessage.collectAsState()
+    val showRestoreDialog by viewModel.showRestoreDialog.collectAsState()
 
-    LaunchedEffect(uiState){
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(uiState) {
         viewModel.loadProfile()
-        when(val state = uiState){
+        when (val state = uiState) {
             is UiState.Success -> {
                 profileData.value = ProfileData(
                     name = state.data?.payload?.user?.name,
@@ -58,30 +66,51 @@ fun ProfileScreen(
                     phoneNumber = state.data?.payload?.user?.phoneNumber,
                 )
             }
+
             is UiState.Error -> {
                 // Handle error state if needed
             }
+
             else -> {}
         }
     }
-    Column(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .fillMaxSize()
-            .padding(spacing.space3x)
+    LaunchedEffect(snackbarMessage) {
+        snackbarMessage?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.clearSnackbarMessage()
+        }
+    }
 
-    ) {
-        ProfileDataContainer(spacing, fontWeight, profileData)
-        ProfileActions(
-            spacing = spacing,
-            fontWeight = fontWeight,
-            onClickChangePassword = {
-
+    Scaffold (
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxSize()
+                .padding(spacing.space3x)
+                .padding(paddingValues) // Add this to respect Scaffold insets
+        ) {
+            ProfileDataContainer(spacing, fontWeight, profileData)
+            ProfileActions(
+                spacing = spacing,
+                fontWeight = fontWeight,
+                onClickChangePassword = { viewModel.forgotPassword() },
+                onClickCloseSession = {
+                    loginCallback.value = false
+                    viewModel.closeSession()
+                }
+            )
+        }
+        RestorePasswordDialog (
+            showDialog = showRestoreDialog,
+            onDismiss = {
+                viewModel.closeDialog()
             },
-            onClickCloseSession = {
-                loginCallback.value = false
-                viewModel.closeSession()
-            }
+            onRestorePassword = { code, password, confirmPassword ->
+                viewModel.restorePassword(password, confirmPassword, code)
+            },
+            onRetry = { viewModel.forgotPassword() }
         )
     }
 }
@@ -185,7 +214,11 @@ private fun ProfileDataContainer(
                 .background(MaterialTheme.colorScheme.onTertiaryContainer)
                 .padding(spacing.space3x)
         ) {
-            UserName(spacing, profileData.value.name.orEmpty(), profileData.value.lastName.orEmpty())
+            UserName(
+                spacing,
+                profileData.value.name.orEmpty(),
+                profileData.value.lastName.orEmpty()
+            )
 
             Spacer(modifier = Modifier.height(spacing.space3x))
 
@@ -262,7 +295,8 @@ private fun UserName(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AlSuperCircularContainer(
-            initials = (name.firstOrNull()?.toString() ?: "") + (lastName.firstOrNull()?.toString() ?: ""),
+            initials = (name.firstOrNull()?.toString() ?: "") + (lastName.firstOrNull()?.toString()
+                ?: ""),
             backgroundColor = MaterialTheme.colorScheme.surfaceTint,
             size = spacing.imageMedium
         )

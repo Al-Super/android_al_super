@@ -15,8 +15,12 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +32,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import com.centroi.alsuper.core.ui.AlSuperTheme
@@ -44,22 +50,42 @@ import com.centroi.alsuper.feature.contacts.viewmodel.EmergencyContactsViewModel
 @Composable
 fun ContactsListScreen(
     navController: NavController,
-    emergencyContactsViewModel: EmergencyContactsViewModel = hiltViewModel()
-){
+    emergencyContactsViewModel: EmergencyContactsViewModel
+) {
     val contacts by emergencyContactsViewModel.emergencyContacts.collectAsState(initial = emptyList())
+    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    val snackbarMessage by emergencyContactsViewModel.snackbarMessage.collectAsStateWithLifecycle()
+    val dimens = LocalSpacing.current
 
-    ContactsListScreen(
-        navigateToAddContact = {
-            navController.navigate(Routes.AddContactScreen.name) { launchSingleTop = true}
-        },
-        navigateToEditContact = { contactId ->
-            navController.navigate("${Routes.EditContactScreen.name}/$contactId") { launchSingleTop = true }
-        },
-        deleteContact = { contact ->
-            emergencyContactsViewModel.deleteContact(contact)
-        },
-        contacts = contacts
-    )
+    LaunchedEffect(snackbarMessage) {
+        snackbarMessage?.let {
+            snackbarHostState.showSnackbar(it)
+            emergencyContactsViewModel.clearSnackbarMessage()
+        }
+    }
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(
+                modifier = Modifier.padding(bottom = dimens.space12x),
+                hostState = snackbarHostState
+            )
+        }
+    ) {
+        ContactsListScreen(
+            navigateToAddContact = {
+                navController.navigate(Routes.AddContactScreen.name) { launchSingleTop = true }
+            },
+            navigateToEditContact = { contactId ->
+                navController.navigate("${Routes.EditContactScreen.name}/$contactId") {
+                    launchSingleTop = true
+                }
+            },
+            deleteContact = { contact ->
+                emergencyContactsViewModel.deleteContact(contact)
+            },
+            contacts = contacts
+        )
+    }
 }
 
 @Composable

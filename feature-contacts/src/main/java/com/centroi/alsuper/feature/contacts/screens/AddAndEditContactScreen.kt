@@ -40,7 +40,10 @@ import com.centroi.alsuper.core.ui.components.editText.PhoneNumberTextField
 import com.centroi.alsuper.feature.contacts.viewmodel.EmergencyContactsViewModel
 
 @Composable
-fun AddContactScreen(navController: NavController) {
+fun AddContactScreen(
+    navController: NavController,
+    viewModel: EmergencyContactsViewModel
+) {
     Dialog(
         onDismissRequest = { navController.popBackStack() },
         properties = DialogProperties(
@@ -52,14 +55,19 @@ fun AddContactScreen(navController: NavController) {
             color = MaterialTheme.colorScheme.background
         ) {
             AddAndEditContactScreen(
-                saveContact = { navController.popBackStack() }
+                saveContact = { navController.popBackStack() },
+                viewModel = viewModel
             )
         }
     }
 }
 
 @Composable
-fun EditContactScreen(navController: NavController, contactId: Int) {
+fun EditContactScreen(
+    navController: NavController,
+    contactId: Int,
+    viewModel: EmergencyContactsViewModel
+) {
     Dialog(
         onDismissRequest = { navController.popBackStack() },
         properties = DialogProperties(
@@ -72,7 +80,8 @@ fun EditContactScreen(navController: NavController, contactId: Int) {
         ) {
             AddAndEditContactScreen(
                 contactId = contactId,
-                saveContact = { navController.popBackStack() }
+                saveContact = { navController.popBackStack() },
+                viewModel = viewModel
             )
         }
     }
@@ -81,7 +90,7 @@ fun EditContactScreen(navController: NavController, contactId: Int) {
 @Composable
 internal fun AddAndEditContactScreen(
     contactId: Int? = null,
-    viewModel: EmergencyContactsViewModel = hiltViewModel(),
+    viewModel: EmergencyContactsViewModel,
     saveContact: () -> Unit = {}
 ) {
     val spacing = LocalSpacing.current

@@ -3,13 +3,16 @@ package com.centroi.alsuper.feature.contacts.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.centroi.alsuper.core.data.ResultState
 import com.centroi.alsuper.core.data.repositories.EmergencyContactsRepository
 import com.centroi.alsuper.core.data.extensions.EncryptionHelper
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import com.centroi.alsuper.feature.contacts.MAX_RGB_COLOR
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -22,32 +25,36 @@ class EmergencyContactsViewModel @Inject constructor(
     private val repository: EmergencyContactsRepository
 ) : ViewModel() {
 
-    // Fetch and decrypt contacts inside ViewModel
+    private val _snackbarMessage = MutableStateFlow<String?>(null)
+    val snackbarMessage = _snackbarMessage.asStateFlow()
     val emergencyContacts: StateFlow<List<EmergencyContact>> = repository.getEmergencyContacts()
         .map { contacts ->
             contacts.map { contact ->
-                contact.copy(
-                    phoneNumber = decryptPhoneNumber(contact.phoneNumber)
-                )
+                contact.copy( phoneNumber = contact.phoneNumber )
             }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList()) // Caches & avoids recomputation
 
     fun insertContact(name: String, surname: String, phoneNumber: String) {
         val randomColor = generateRandomColor()
-        val encryptedPhoneNumber = EncryptionHelper.encrypt(phoneNumber)
 
         val contact = EmergencyContact(
             id = 0,
             name = name,
             surname = surname,
-            phoneNumber = encryptedPhoneNumber,
+            phoneNumber = phoneNumber,
             color = randomColor,
             isMain = false
         )
 
         viewModelScope.launch {
-            repository.insertContact(contact)
+            repository.insertContactSafe(contact).collect { result ->
+                when (result) {
+                    is ResultState.Error -> _snackbarMessage.value = "No se pudo añadir el contacto. Inténtalo de nuevo."
+                    is ResultState.Success -> _snackbarMessage.value = null
+                    else -> {}
+                }
+            }
         }
     }
 
@@ -59,36 +66,20 @@ class EmergencyContactsViewModel @Inject constructor(
 
     fun updateContact(contact: EmergencyContact) {
         viewModelScope.launch {
-            val encryptedPhoneNumber = EncryptionHelper.encrypt(contact.phoneNumber)
 
-            val updatedContact = contact.copy(
-                phoneNumber = encryptedPhoneNumber
-            )
-
-            repository.updateContact(updatedContact)
+            repository.updateContact(contact)
         }
     }
 
     fun loadContactById(contactId: Int, onResult: (EmergencyContact?) -> Unit) {
         viewModelScope.launch {
             val contact = repository.getContactById(contactId)
-            contact?.let {
-                val decryptedContact = it.copy(phoneNumber = EncryptionHelper.decrypt(it.phoneNumber))
-                onResult(decryptedContact) // Pass the decrypted contact to the UI
-            } ?: onResult(null)
+            onResult(contact)
         }
     }
 
-    private fun decryptPhoneNumber(encryptedPhone: String): String {
-        return try {
-            EncryptionHelper.decrypt(encryptedPhone)
-        } catch (e: GeneralSecurityException) {
-            Log.e("Decrypt", "Failed to decrypt phone number", e)
-            "Error"
-        } catch (e: IOException) {
-            Log.e("Decrypt", "IO error while decrypting phone number", e)
-            "Error"
-        }
+    fun clearSnackbarMessage() {
+        _snackbarMessage.value = null
     }
 
     private fun generateRandomColor(): String {

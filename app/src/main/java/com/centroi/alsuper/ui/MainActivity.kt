@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -91,6 +92,7 @@ fun MainScreen(
     val navController = rememberNavController()
     navControllerManager.initializeNavController(navController)
     val context = LocalContext.current
+    val showSuccessDialog = remember { mutableStateOf(false) }
     val signedIn = remember { mutableStateOf(false) }
     val onFakeApp = remember { mutableStateOf(true) }
     val onShowSoS = remember { mutableStateOf(false) }
@@ -159,7 +161,7 @@ fun MainScreen(
                                 )
                                 Text(
                                     modifier = Modifier.padding(start = 8.dp),
-                                    text = "Panic button",
+                                    text = "Botón de panico",
                                     fontWeight = androidx.compose.ui.text.font.FontWeight.W500
                                 )
                             }
@@ -175,12 +177,29 @@ fun MainScreen(
                         modifier = Modifier.fillMaxSize(),
                         containerColor = MaterialTheme.colorScheme.background,
                     ) {
-                        PanicScreen(onShowSoS)
+                        PanicScreen(showSuccessDialog,onShowSoS)
                     }
                 }
 
             }
             Log.d("MainScreen", "MainScreen: $innerPadding")
+        }
+        if (showSuccessDialog.value) {
+            AlertDialog(
+                containerColor = MaterialTheme.colorScheme.background,
+                onDismissRequest = { showSuccessDialog.value = false },
+                title = { Text("¡SOS enviado!") },
+                text = { Text("Mensaje enviado exitosamente.") },
+                confirmButton = {
+                    androidx.compose.material3.Button(onClick = {
+                        showSuccessDialog.value = false
+                        onShowSoS.value = false
+                    }
+                    ) {
+                        Text("Salir")
+                    }
+                }
+            )
         }
     }
 

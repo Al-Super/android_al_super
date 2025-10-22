@@ -8,6 +8,10 @@ import com.centroi.alsuper.core.data.models.login.LoginRegisterResponse
 import com.centroi.alsuper.core.data.models.login.LoginRequest
 import com.centroi.alsuper.core.data.models.login.LoginResponse
 import com.centroi.alsuper.core.data.models.user.AuthMeResponse
+import com.centroi.alsuper.core.data.models.user.ForgotPasswordRequest
+import com.centroi.alsuper.core.data.models.user.ForgotPasswordResponse
+import com.centroi.alsuper.core.data.models.user.RestorePasswordRequest
+import com.centroi.alsuper.core.data.models.user.RestorePasswordResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -30,4 +34,10 @@ interface AuthUserService {
 
     @GET("/api/auth/me")
     suspend fun authUserMe(): Response<AuthMeResponse>
+
+    @POST("/api/password/forgot")
+    suspend fun forgotPassword(@Body request: ForgotPasswordRequest): Response<ForgotPasswordResponse>
+
+    @PUT("/api/password/restore")
+    suspend fun restorePassword(@Body request: RestorePasswordRequest): Response<RestorePasswordResponse>
 }
