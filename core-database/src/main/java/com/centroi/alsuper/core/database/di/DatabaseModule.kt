@@ -27,6 +27,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import com.centroi.alsuper.core.database.AppDatabase
 import com.centroi.alsuper.core.database.LandingPageDao
+import com.centroi.alsuper.core.database.tables.CartItemDao
 import com.centroi.alsuper.core.database.tables.EmergencyContactDao
 import com.centroi.alsuper.core.database.tables.LocationDao
 import com.centroi.alsuper.core.database.tables.UserIDDao
@@ -69,14 +70,24 @@ class DatabaseModule {
 
     @Provides
     @Singleton
+    fun provideCartItemDao(appDatabase: AppDatabase): CartItemDao {
+        return appDatabase.cartItemDao()
+    }
+
+    @Provides
+    @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context): AppDatabase {
-        val MIGRATION_2_3 = object : Migration(2, 3) {
+        val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(
                     """
-                CREATE TABLE IF NOT EXISTS UserID (
-                id INTEGER PRIMARY KEY NOT NULL,
-                userId TEXT NOT NULL
+                         CREATE TABLE IF NOT EXISTS CartItem (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                productId TEXT NOT NULL,
+                name TEXT NOT NULL,
+                price REAL NOT NULL,
+                imageUrl TEXT,
+                quantity INTEGER NOT NULL
             )
         """.trimIndent()
                 )
@@ -87,7 +98,7 @@ class DatabaseModule {
             AppDatabase::class.java,
             "LandingPage"
         )
-            .addMigrations(MIGRATION_2_3)
+            .addMigrations(MIGRATION_3_4)
             .build()
     }
 }

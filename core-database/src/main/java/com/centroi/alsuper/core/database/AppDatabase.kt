@@ -18,6 +18,8 @@ package com.centroi.alsuper.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.centroi.alsuper.core.database.tables.CartItem
+import com.centroi.alsuper.core.database.tables.CartItemDao
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import com.centroi.alsuper.core.database.tables.EmergencyContactDao
 import com.centroi.alsuper.core.database.tables.Location
@@ -33,9 +35,10 @@ import com.centroi.alsuper.core.database.tables.UserSessionDao
         EmergencyContact::class,
         Location::class,
         UserSession::class,
-        UserID::class
+        UserID::class,
+        CartItem::class
     ],
-    version = 3
+    version = 4
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun landingPageDao(): LandingPageDao
@@ -43,4 +46,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun locationDao(): LocationDao
     abstract fun userSessionDao(): UserSessionDao
     abstract fun userIdDao(): UserIDDao
+    abstract fun cartItemDao(): CartItemDao
 }

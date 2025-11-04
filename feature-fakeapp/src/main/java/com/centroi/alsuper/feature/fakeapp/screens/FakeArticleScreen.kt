@@ -1,6 +1,7 @@
 package com.centroi.alsuper.feature.fakeapp.screens
 
 import android.graphics.Color
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_7_PRO
@@ -34,8 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.centroi.alsuper.core.data.models.fakearticle.CartItemData
 import com.centroi.alsuper.core.ui.Black
 import com.centroi.alsuper.core.ui.Dimens
 import com.centroi.alsuper.core.ui.FontWeight
@@ -44,6 +48,7 @@ import com.centroi.alsuper.core.ui.R
 import com.centroi.alsuper.core.ui.White
 import com.centroi.alsuper.core.ui.Yellow
 import com.centroi.alsuper.core.ui.components.button.MainButton
+import java.util.UUID
 
 @Preview(
     showBackground = false,
@@ -53,7 +58,8 @@ import com.centroi.alsuper.core.ui.components.button.MainButton
 )
 @Composable
 fun FakeArticleScreen(
-    navController: NavController = rememberNavController()
+    navController: NavController = rememberNavController(),
+    viewModel: CartScreenViewModelAbstract = hiltViewModel<CartScreenViewModel>()
 ) {
     Dialog(
         onDismissRequest = { navController.popBackStack() },
@@ -65,7 +71,7 @@ fun FakeArticleScreen(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            FakeArticleScreenContent(navController)
+            FakeArticleScreenContent(navController, viewModel)
         }
 
     }
@@ -73,9 +79,12 @@ fun FakeArticleScreen(
 
 @Composable
 private fun FakeArticleScreenContent(
-    navController: NavController
+    navController: NavController,
+    viewModel: CartScreenViewModelAbstract
 ) {
     val dimens = LocalSpacing.current
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -173,7 +182,17 @@ private fun FakeArticleScreenContent(
                         .padding(
                             vertical = dimens.space3x,
                         )
-                        .clickable(onClick = { })
+                        .clickable(onClick = {
+                            val product = CartItemData(
+                                productId = UUID.randomUUID().toString(),
+                                name = "Coquimbo Sewing Kit Gifts for Mom Grandma Women Men Adults Kids Teens Beginner Kids Traveler, Portable Sewing Supplies Accessories Contains Thread, Needles, Scissors, Dorm Room Essentials (Black, M)",
+                                price = 8.99,
+                                imageUrl = null,
+                                quantity = 1
+                            )
+                            viewModel.addProduct(product)
+                            Toast.makeText(context, "Producto añadido al carrito", Toast.LENGTH_SHORT).show()
+                        })
                 ) {
                     Image(
                         painter = painterResource(R.drawable.ic_basket),
