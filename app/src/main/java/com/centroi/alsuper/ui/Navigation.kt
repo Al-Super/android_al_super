@@ -18,6 +18,7 @@ package com.centroi.alsuper.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,7 +32,9 @@ import com.centroi.alsuper.feature.chat.ChatScreen
 import com.centroi.alsuper.feature.contacts.screens.AddContactScreen
 import com.centroi.alsuper.feature.contacts.screens.ContactsListScreen
 import com.centroi.alsuper.feature.contacts.screens.EditContactScreen
+import com.centroi.alsuper.feature.contacts.viewmodel.EmergencyContactsViewModel
 import com.centroi.alsuper.feature.fakeapp.screens.CartScreen
+import com.centroi.alsuper.feature.fakeapp.screens.FakeArticleScreen
 import com.centroi.alsuper.feature.fakeapp.screens.FakeHomeScreen
 import com.centroi.alsuper.feature.information.InformationScreen
 import com.centroi.alsuper.feature.profile.screens.ProfileScreen
@@ -41,7 +44,8 @@ fun MainNavigation(
     navController: NavHostController,
     loginCallback : MutableState<Boolean>,
     shouldShowLandingPage: Boolean,
-    onChangeAppTheme: MutableState<Boolean>
+    onChangeAppTheme: MutableState<Boolean>,
+    viewModel: EmergencyContactsViewModel = hiltViewModel()
 ) {
     NavHost(navController = navController, startDestination = Routes.SplashScreen.name) {
         composable(Routes.SplashScreen.name) {
@@ -63,16 +67,16 @@ fun MainNavigation(
         composable(Routes.FakeHomeScreen.name) { FakeHomeScreen(navController) }
         composable(Routes.CartScreen.name) { CartScreen(navController) }
         composable(Routes.ProfileScreen.name) { ProfileScreen(loginCallback) }
-        composable(Routes.ContactsListScreen.name) { ContactsListScreen(navController = navController) }
-        composable(Routes.AddContactScreen.name) { AddContactScreen(navController = navController) }
+        composable(Routes.ContactsListScreen.name) { ContactsListScreen(navController = navController,  emergencyContactsViewModel = viewModel) }
+        composable(Routes.AddContactScreen.name) { AddContactScreen(navController = navController, viewModel = viewModel) }
         composable(Routes.InformationScreen.name) { InformationScreen() }
         composable(Routes.SelfDiagnosisScreen.name) { ChatScreen() }
-        composable(Routes.FakeArticleScreen.name) {  }
+        composable(Routes.FakeArticleScreen.name) { FakeArticleScreen(navController) }
         composable(Routes.ConfirmationScreen.name) { ConfirmationScreen(loginCallback)}
         composable("${Routes.EditContactScreen.name}/{$CONTACT_ID}") { backStackEntry ->
             val contactId = backStackEntry.arguments?.getString(CONTACT_ID)?.toIntOrNull()
             contactId?.let {
-                EditContactScreen(navController = navController, contactId = it)
+                EditContactScreen(navController = navController, contactId = it,  viewModel = viewModel)
             }
         }
     }

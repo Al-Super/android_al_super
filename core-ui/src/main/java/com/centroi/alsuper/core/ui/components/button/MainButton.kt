@@ -21,12 +21,14 @@ fun MainButton(
     modifier: Modifier = Modifier,
     text: String = "",
     onClick: () -> Unit,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = {
             onClick()
         },
         modifier = modifier,
+        enabled = enabled,
         colors = ButtonColors(
             containerColor = MainYellow,
             contentColor = Color.Black,

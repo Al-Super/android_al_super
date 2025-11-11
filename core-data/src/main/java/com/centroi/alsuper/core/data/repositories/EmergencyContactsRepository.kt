@@ -1,11 +1,14 @@
 package com.centroi.alsuper.core.data.repositories
 
+import com.centroi.alsuper.core.data.ResultState
+import com.centroi.alsuper.core.data.extensions.ApiCall
 import com.centroi.alsuper.core.data.models.contacts.ContactRequest
 import com.centroi.alsuper.core.data.models.contacts.RemoteContact
 import com.centroi.alsuper.core.data.services.ContactService
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import com.centroi.alsuper.core.database.tables.EmergencyContactDao
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import retrofit2.Retrofit
 import javax.inject.Inject
 import kotlin.text.compareTo
@@ -48,7 +51,7 @@ contactService.updateContact(local.id, local.toRemoteRequest())
 
 interface EmergencyContactsRepository {
     fun getEmergencyContacts(): Flow<List<EmergencyContact>>
-    suspend fun insertContact(contact: EmergencyContact)
+    suspend fun insertContactSafe(contact: EmergencyContact): Flow<ResultState<EmergencyContact>>
     suspend fun deleteContact(contact: EmergencyContact)
     suspend fun updateContact(contact: EmergencyContact)
     suspend fun getContactById(contactId: Int): EmergencyContact?
@@ -68,13 +71,23 @@ class EmergencyContactsRepositoryImpl @Inject constructor(
         return dao.getEmergencyContacts()
     }
 
-    override suspend fun insertContact(contact: EmergencyContact) {
+    override suspend fun insertContactSafe(contact: EmergencyContact): Flow<ResultState<EmergencyContact>> {
         val request = ContactRequest(contact.name, contact.surname, contact.phoneNumber, contact.isMain)
-        val response = contactService.addContact(request)
-        if (response.isSuccessful) {
-            val remote = response.body()?.payload?.contact
-            if (remote != null) {
-                dao.insertContact(remote.toLocal())
+        return ApiCall.safeApiCall {
+            contactService.addContact(request)
+        }.map { result ->
+            when (result) {
+                is ResultState.Success -> {
+                    val remote = result.data?.payload?.contact
+                    if (remote != null) {
+                        dao.insertContact(remote.toLocal())
+                        ResultState.Success(remote.toLocal())
+                    } else {
+                        ResultState.Error("No hay contactos")
+                    }
+                }
+                is ResultState.Error -> ResultState.Error(result.message ?: "Hubo un error al agregar el contacto")
+                is ResultState.Loading -> ResultState.Loading()
             }
         }
     }

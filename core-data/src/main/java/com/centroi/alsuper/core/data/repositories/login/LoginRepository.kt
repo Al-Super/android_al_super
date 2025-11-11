@@ -54,7 +54,7 @@ class LoginRepository @Inject constructor(
                         email = email,
                         password = password,
                         phoneNumber = phone,
-                        birthdate = null
+                        birthdate = birthdate
                     )
                 )
         }

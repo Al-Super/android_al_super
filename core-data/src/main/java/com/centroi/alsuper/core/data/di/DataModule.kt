@@ -16,6 +16,7 @@
 
 package com.centroi.alsuper.core.data.di
 
+import com.centroi.alsuper.core.data.ResultState
 import com.centroi.alsuper.core.data.models.LandingPageData
 import com.centroi.alsuper.core.data.models.LandingPageName
 import dagger.Binds
@@ -32,14 +33,19 @@ import com.centroi.alsuper.core.data.repositories.LocationRepository
 import com.centroi.alsuper.core.data.repositories.LocationRepositoryImpl
 import com.centroi.alsuper.core.data.repositories.chat.ChatRepository
 import com.centroi.alsuper.core.data.repositories.chat.ChatRepositoryInt
+import com.centroi.alsuper.core.data.repositories.fakearticles.CartRepository
+import com.centroi.alsuper.core.data.repositories.fakearticles.CartRepositoryInt
 import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageDataProviderImpl
 import com.centroi.alsuper.core.data.repositories.landingPage.LandingPageDataProviderInt
 import com.centroi.alsuper.core.data.repositories.login.LoginRepository
 import com.centroi.alsuper.core.data.repositories.login.LoginRepositoryInt
 import com.centroi.alsuper.core.data.repositories.login.ProfileRepository
 import com.centroi.alsuper.core.data.repositories.login.ProfileRepositoryInt
+import com.centroi.alsuper.core.data.repositories.panic.PanicRepository
+import com.centroi.alsuper.core.data.repositories.panic.PanicRepositoryInt
 import com.centroi.alsuper.core.database.tables.EmergencyContact
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -88,6 +94,18 @@ interface DataModule {
     fun bindProfileRepository(
         impl: ProfileRepository
     ): ProfileRepositoryInt
+
+    @Singleton
+    @Binds
+    fun bindPanicRepository(
+        impl: PanicRepository
+    ): PanicRepositoryInt
+
+    @Singleton
+    @Binds
+    fun bindFakeArticleRepository(
+        impl: CartRepository
+    ): CartRepositoryInt
 }
 
 class FakeLandingPageRepository @Inject constructor() : LandingPageRepository {
@@ -105,9 +123,10 @@ class FakeEmergencyContactsRepository @Inject constructor() : EmergencyContactsR
 
     override fun getEmergencyContacts(): Flow<List<EmergencyContact>> = contacts
 
-    override suspend fun insertContact(contact: EmergencyContact) {
+    override suspend fun insertContactSafe(contact: EmergencyContact): Flow<ResultState<EmergencyContact>>  {
         insertedContacts.add(contact)
         contacts.value = contacts.value + contact
+        return flow { emit(ResultState.Success(contact)) }
     }
 
     override suspend fun deleteContact(contact: EmergencyContact) {
